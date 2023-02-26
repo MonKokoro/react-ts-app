@@ -1,5 +1,4 @@
 import React, { useState, useImperativeHandle, useRef, ReactNode } from 'react';
-import type { TableProps, TableColumnProps } from 'antd';
 import useDeepEffect from "@/hooks/useDeepEffect"
 import AdvancedSearchForm from "./advanced-search-form";
 import TableContent from "./table-content"
@@ -39,7 +38,7 @@ function ModernTable({
         total: 0
     })
     const [ param, setParam ] = useState({})
-    const [ usedColumn, setUsedColumn ] = useState([])
+    const [ usedColumn, setUsedColumn ] = useState<any[]>([])
     const [ selectedKeysMap, addKeys, deleteKeys, clearKeys ] = useSelectedKeysMap()
     const [ expandSelectedKeysMap, setExpandKeys, clearExpandKeys ] = useExpandSelectedKeysMap()
 
@@ -50,20 +49,19 @@ function ModernTable({
     }, [defaultData])
 
     useDeepEffect(() => {
-        let result = []
-        column.map(item => {
-            if(!item.hidden){
-                result.push(item)
-            }
-        })
-        setUsedColumn(result)
+        const result: any = column.reduce((prev: object[], curr: any) => {
+            if (!curr.hidden)
+                prev.push(curr);
+            return prev;
+        }, [])
+        setUsedColumn(result);
     }, [column])
 
     useImperativeHandle(ref, () => ({
         /** 搜索方法 */
         search: () => { search( page, param, true ) },
         /** 重置方法 */
-        reset: () => { reset() },
+        reset: () => { search( page, param, true ) },
         /** 获取搜索条件对象 */
         getSearchingValues: () => { return param },
         /** 清除搜索条件 */
@@ -184,13 +182,13 @@ export type ModernTableProps = {
     url: string
     defaultData: object
     rowKey?: string
-    column: TableColumnProps<any>[]
+    column: object[]
     scroll?: { x?: number, y?: number }
     topRender?: ReactNode
     leftButtonList?: leftButtonListProps[]
     rowSelect?: rowSelectProps | boolean
     rowDisabled?: () => boolean
     expand?: boolean
-    tableProps?: TableProps<any>
+    tableProps?: object
 }
 export default ModernTable

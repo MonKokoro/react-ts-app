@@ -1,4 +1,7 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useRef } from "react";
+import useDataList from './hooks/useDataList';
+import useSelectedKeysMap from './hooks/useSelectedKeysMap';
+import useExpandSelectedKeysMap from './hooks/useExpandSelectedKeysMap';
 import lib from "@/lib";
 
 const Context = createContext(undefined);
@@ -17,6 +20,9 @@ function ContextProvider({ children, url, method, defaultData, clearSelected }: 
     })
     const [ param, setParam ] = useState<object>({})
     const [ dataList, setDataList ] = useState<object[]>([])
+
+    const [ selectedKeysMap, addKeys, deleteKeys, clearKeys ] = useSelectedKeysMap()
+    const [ expandSelectedKeysMap, setExpandKeys, clearExpandKeys ] = useExpandSelectedKeysMap()
 
     function search(page: pageType, param: object, clear: boolean){
         lib.request({
