@@ -1,0 +1,96 @@
+.menu{
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    .menu-item{
+        position: relative;
+        height: 48px;
+        line-height: 48px;
+        // margin: 4px 0;
+        color: rgba(0, 0, 0, 0.85);
+        cursor: pointer;
+        .icon{
+            display: inline-block;
+            width: 40px;
+        }
+        .label{
+            display: inline-block;
+            width: calc(100% - 48px);
+            font-size: 14px;
+        }
+        .label-expandable{
+            display: inline-block;
+            width: calc(100% - 78px);
+            font-size: 14px;
+        }
+        .arrow{
+            display: inline-block;
+            text-align: center;
+            width: 30px;
+            transform-origin: 50% 50%;
+
+            transition: all 0.3s;
+        }
+        .arrow-expand{
+            transform: rotate(180deg);
+        }
+
+        transition: all 0.3s;
+    }
+    .menu-item:hover{
+        color: #1890ff;
+    }
+
+    .menu-item-focus{
+        background: linear-gradient(to right, #b8ebd1, #edf5f1);
+    }
+    .menu-item-focus::before{
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        border-right: 3px solid #1890ff;
+        content: '';
+    }
+
+    .menu-item-unfocus:hover::before{
+        transform: translate(0);
+    }
+
+    .menu-item-unfocus::before{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 120%;
+        height: 100%;
+        background: linear-gradient(to right, #e5f3ec, #ffffff);
+        content: '';
+        z-index: -1;
+        transform: translate(-120%);
+
+        transition: all 0.5s ease;
+    }
+
+    .sub-menu{
+        background-color: #EEEEEE;
+        .label{
+            width: 100%;
+            font-size: 14px;
+            word-break: break-all;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding-left: 60px;
+        }
+    }
+
+    .sub-menu-item{
+        height: 40px;
+        line-height: 40px;
+        overflow: hidden;
+
+        transition: all 0.3s ease-in-out;
+    }
+    .sub-menu-item-close{
+        height: 0;
+    }
+}

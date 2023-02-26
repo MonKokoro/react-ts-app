@@ -1,0 +1,163 @@
+.login{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    min-width: 500px;
+    min-height: 480px;
+    overflow: hidden;
+    .circle{
+        position: absolute;
+        overflow: hidden;
+        width: 2000px;
+        height: 2000px;
+        border-radius: 50%;
+        background: linear-gradient(-45deg, #4481eb, #04befe);
+        top: -120%;
+        right: 50%;
+        
+        // animation-name: circleIn;
+        // animation-duration: 0.5s;
+        // animation-direction: alternate;
+        // animation-timing-function: cubic-bezier(0,.5,.5,1);
+
+        transition: 0.8s ease-in-out;
+    }
+
+    .circle-ventical{
+        top: -500px;
+        transform: translate(40%, -50%)
+    }
+    
+    @keyframes circleIn{
+        0% {
+            transform: translate(-300px, 0)
+        }
+        100% {
+            transform: translate(0, 0)
+        }
+    }
+
+    .container{
+        position: absolute;
+        top: 50%;
+        left: 75%;
+        transform: translate(-50%, -50%);
+        width: 480px;
+        padding: 48px;
+        border-radius: 24px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .title{
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .input-field{
+            width: 100%;
+            height: 48px;
+            padding: 16px;
+            margin-top: 16px;
+            background-color: #EEEEEE;
+            border-radius: 24px;
+            transition: all 0.5s;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            // animation-name: fieldJump;
+            // animation-duration: 0.5s;
+            // animation-timing-function: ease-in-out;
+
+            img{
+                width: 28px;
+                flex-grow: 0;
+                margin-right: 12px;
+            }
+            input{
+                height: 40px;
+                background: none;
+                border: none;
+                flex-grow: 1;
+                outline: none;
+            }
+        }
+        .input-field:hover{
+            background-color: #F8F8F8;
+        }
+
+        // @keyframes fieldJump{
+        //     0% {
+        //         transform: scale(0);
+        //         opacity: 0;
+        //     }
+        //     50% {
+        //         transform: scale(1.15);
+        //         opacity: 1;
+        //     }
+        //     75% {
+        //         transform: scale(0.93)
+        //     }
+        //     100% {
+        //         transform: scale(1);
+        //     }
+        // }
+
+        .input-field-warn{
+            border: 1px solid crimson;
+            animation-name: warnJump;
+            animation-duration: 0.2s;
+            animation-direction: alternate;
+        }
+
+        @keyframes warnJump{
+            0% {
+                transform: translate(0)
+            }
+            25% {
+                transform: translate(15px);
+            }
+            50% {
+                transform: translate(0)
+            }
+            75% {
+                transform: translate(15px);
+            }
+            100% {
+                transform: translate(0)
+            }
+        }
+
+        .button-field{
+            width: 160px;
+            height: 48px;
+            margin: 16px;
+            background: #4481eb;
+            color: white;
+            border-radius: 24px;
+            transition: all 0.5s;
+            cursor: pointer;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .button-field:hover{
+            background: #04befe;
+        }
+
+        .description-field{
+            color: #333333;
+            font-size: 14px;
+        }
+    }
+    .container-center{
+        left: 50%;
+        background: rgba(255, 255, 255, 0.5);
+    }
+}
