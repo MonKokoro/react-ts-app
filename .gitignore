@@ -1,7 +1,5 @@
 /node_modules
 /build
-/.idea/misc.xml
-/.idea
 /.vscode
 /package-lock.json
 /debug.log
