@@ -1,11 +1,18 @@
 import Mock from "mockjs";
 
-function structuring(jsonUrl){
-    return {
+Mock.mock(/\/mock\/getBondMemberList*?/, 'get', ({ body }) => {
+    const request = JSON.parse(body)
+    return { 
         code: 200,
-        data: require(jsonUrl),
-        msg: "操作成功"
+        data: {
+            page: {
+                current: request.current,
+                pageSize: request.pageSize,
+                total: 4
+            },
+            list: require('./json/bondMemberList.json')
+        }, 
+        success: true,
+        msg: "操作成功" 
     }
-}
-
-export default Mock.mock('/getDataList', 'GET', structuring('./json/bondMemberList.json'))
+})

@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react"
 import { useLocation, useNavigate, useOutlet } from 'react-router-dom';
-import { ConfigProvider, Input, Avatar } from 'antd';
+import { SwitchTransition, CSSTransition } from "react-transition-group";
+import { ConfigProvider, Input, Avatar, Spin } from 'antd';
 import { SkinFilled, DownOutlined } from '@ant-design/icons';
 import zhCN from "antd/lib/locale/zh_CN"
 import './layout.less'
 
 import Menu from './menu'
 import { routeList } from "./router";
-import { SwitchTransition, CSSTransition } from "react-transition-group";
+import store from "./store";
 
 function Layout () {
     const location = useLocation();
     const navigate = useNavigate();
     const currentOutlet = useOutlet()
     const [ userName, setUserName ] = useState<string>()
+    const [ maskCount, setMaskCount ] = useState<number>(0)
 
     useEffect(() => {
         if(window.localStorage.getItem("userName")){
@@ -23,6 +25,14 @@ function Layout () {
             navigate('/login')
         }
     }, [])
+
+    useEffect(() => {
+        console.log(maskCount)
+    }, [maskCount])
+
+    store.subscribe(() => {
+        setMaskCount(store.getState().needMaskCount)
+    })
 
     const { nodeRef } = routeList.find((route) => route.path === location.pathname) || {}
 
@@ -55,21 +65,33 @@ function Layout () {
                         </div>
                     </div>
                 </div>
-                <SwitchTransition>
+                <div className="content">
                     <CSSTransition
-                        key={location.pathname}
-                        nodeRef={nodeRef}
-                        timeout={300}
-                        classNames="fade"
+                        in={maskCount ? true : false}
+                         timeout={200}
+                        classNames="mask-fade"
                         unmountOnExit
                     >
-                        {(state) => (
-                            <div ref={nodeRef} className="content">
-                                {currentOutlet}
-                            </div>
-                        )}
+                        <div className="mask">
+                            <Spin tip="加载中，请稍后..."/>
+                        </div>
                     </CSSTransition>
-                </SwitchTransition>
+                    <SwitchTransition>
+                        <CSSTransition
+                            key={location.pathname}
+                            nodeRef={nodeRef}
+                            timeout={300}
+                            classNames="fade"
+                            unmountOnExit
+                        >
+                            {(state) => (
+                                <div ref={nodeRef} className="content-side">
+                                    {currentOutlet}
+                                </div>
+                            )}
+                        </CSSTransition>
+                    </SwitchTransition>
+                </div>
             </div>
         </div>
     </ConfigProvider>

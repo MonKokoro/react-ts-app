@@ -1,14 +1,24 @@
-import React, { useState, useImperativeHandle, useRef, ReactNode } from 'react';
+import React, { useState, useImperativeHandle, useRef, ReactNode, useContext, createContext } from 'react';
 import useDeepEffect from "@/hooks/useDeepEffect"
 import AdvancedSearchForm from "./advanced-search-form";
-import TableContent from "./table-content"
+import TableContent, { leftButtonListProps, rowSelectProps, expandProps } from "./table-content"
 
 import useDataList from './hooks/useDataList';
 import useSelectedKeysMap from './hooks/useSelectedKeysMap';
 import useExpandSelectedKeysMap from './hooks/useExpandSelectedKeysMap';
 
-import lib from '../../lib';
+// import { Context, ContextProvider, ContextConsumer } from './context';
+
+import lib from '@/lib';
 import "./index.less"
+
+const TableContext = createContext(null)
+
+type pageType = {
+    current: number
+    pageSize: number
+    total: number
+}
 
 function ModernTable({ 
     actionRef,
@@ -30,15 +40,16 @@ function ModernTable({
     tableProps = {}
 }: ModernTableProps){
     const ref = actionRef || useRef()
-    
-    const [ dataList, setDataList ] = useDataList([])
-    const [ page, setPage ] = useState({
+
+    const [ usedColumn, setUsedColumn ] = useState<any[]>([])
+    const [ page, setPage ] = useState<pageType>({
         current: 1,
-        pageSize: 5,
+        pageSize: 0,
         total: 0
     })
-    const [ param, setParam ] = useState({})
-    const [ usedColumn, setUsedColumn ] = useState<any[]>([])
+    const [ param, setParam ] = useState<object>({})
+    const [ dataList, setDataList ] = useState<object[]>([])
+
     const [ selectedKeysMap, addKeys, deleteKeys, clearKeys ] = useSelectedKeysMap()
     const [ expandSelectedKeysMap, setExpandKeys, clearExpandKeys ] = useExpandSelectedKeysMap()
 
@@ -85,23 +96,23 @@ function ModernTable({
         /** 设置已选中的key值 */
         /** 注意！如果仅传入key值列表，那由于无法取到本行的详细数据，映射表中对应的行将被占位符替代 */
         /** 因此本方法并不安全，在某些复杂或坑爹需求下可能会产生一些奇怪的问题 */
-        setSelectedKeys: (keys) => {
-            const result = keys.reduce((prev, curr) => {
-                prev.push({[rowKey]: curr})
-                return prev
-            }, [])
-            return addKeys(result)
-        },
-        /** 清除已选中的key值 */
-        clearSelectedKeys: () => {
-            clearKeys()
-            clearExpandKeys()
-        },
-        /** 清除列表数据 */
-        clearDataList: () => { return setDataList([]) }
+        // setSelectedKeys: (keys) => {
+        //     const result = keys.reduce((prev, curr) => {
+        //         prev.push({[rowKey]: curr})
+        //         return prev
+        //     }, [])
+        //     return addKeys(result)
+        // },
+        // /** 清除已选中的key值 */
+        // clearSelectedKeys: () => {
+        //     clearKeys()
+        //     clearExpandKeys()
+        // },
+        // /** 清除列表数据 */
+        // clearDataList: () => { return setDataList([]) }
     }))
 
-    function search(page = {}, param, clear){
+    function search(page: { current: number, pageSize: number }, param: object, clear: boolean){
         lib.request({
             url,
             method,
@@ -112,67 +123,50 @@ function ModernTable({
                 pageSize: page.pageSize || 5,
                 ...defaultData
             },
-            success: (data, res) => {
-                setPage({
-                    current: data.current,
-                    pageSize: data.size,
-                    total: data.total
-                })
+            success: (data: any) => {
+                setPage(data.page)
                 setParam(param)
-                setDataList(
-                    data.records.reduce((prev, curr, index) => {
-                        prev.push({...curr, index})
-                        return prev
-                    }, [])
-                )
+                setDataList(data.list)
                 if(clear){
-                    clearKeys()
-                    clearExpandKeys()
+
                 }
             }
         })
     }
 
     return <div className='modern-table'>
-        {searchConfig.length ? <AdvancedSearchForm 
-            searchConfig={searchConfig}
-            method={method}
-            url={url}
-            search={(values) => {
-                search({current: 1, pageSize: page.pageSize}, values, true)
-            }}
-            clearSearch={clearSearch}
-        /> : ''}
-        <TableContent 
-            column={usedColumn} 
-            actionRef={ref} 
-            rowKey={rowKey}
-            leftButtonList={leftButtonList} 
-            rowSelect={rowSelect} 
-            rowSelectFunction={{selectedKeysMap, addKeys, deleteKeys, clearKeys}}
-            expand={expand}
-            expandSelectFunction={{expandSelectedKeysMap, setExpandKeys, clearExpandKeys}}
-            rowDisabled={rowDisabled}
-            url={url}
-            scroll={scroll}
-            page={page}
-            dataList={dataList.list}
-            search={(pages) => {
-                search(pages, param)
-            }}
-            topRender={topRender}
+        <TableContext.Provider
+            value={{
+                page,
+                setPage,
+                param,
+                setParam,
+                dataList,
+                setDataList,
 
-            tableProps={tableProps}
-        />
+                search
+            }}
+        >
+            {searchConfig.length ? <AdvancedSearchForm 
+                searchConfig={searchConfig}
+                clearSearch={clearSearch}
+            /> : ''}
+            <TableContent 
+                column={usedColumn} 
+                rowKey={rowKey}
+                leftButtonList={leftButtonList} 
+                rowSelect={rowSelect} 
+                expand={expand}
+                rowDisabled={rowDisabled}
+                scroll={scroll}
+                topRender={topRender}
+
+                tableProps={tableProps}
+            />
+        </TableContext.Provider>
     </div>
 }
 export type searchConfigProps = {
-
-}
-export type leftButtonListProps = {
-
-}
-export type rowSelectProps = {
 
 }
 export type ModernTableProps = {
@@ -180,7 +174,7 @@ export type ModernTableProps = {
     searchConfig?: searchConfigProps[]
     method?: "GET" | "POST"
     url: string
-    defaultData: object
+    defaultData?: object
     rowKey?: string
     column: object[]
     scroll?: { x?: number, y?: number }
@@ -188,7 +182,9 @@ export type ModernTableProps = {
     leftButtonList?: leftButtonListProps[]
     rowSelect?: rowSelectProps | boolean
     rowDisabled?: () => boolean
-    expand?: boolean
+    expand?: expandProps | false
     tableProps?: object
 }
+
+export { TableContext }
 export default ModernTable

@@ -31,7 +31,7 @@ module.exports = {
         alias: {
             '@': path.resolve(__dirname, '../src')
         },
-        extensions: ['.tsx', '.js'],
+        extensions: ['.tsx', '.js', '.ts'],
         // modules: [
         //     'node_modules',
         //     paths.appSrc,

@@ -1,10 +1,24 @@
+/** 抽离provider产生的问题：在index中获取context时，最初取到的是createContext的默认值
+ * 但像search这样关联属性的方法无法写到createContext中
+ * 
+ * 等想到好方法的时候再改改吧
+*/
+
 import React, { createContext, useState, useEffect, useRef } from "react";
 import useDataList from './hooks/useDataList';
 import useSelectedKeysMap from './hooks/useSelectedKeysMap';
 import useExpandSelectedKeysMap from './hooks/useExpandSelectedKeysMap';
 import lib from "@/lib";
 
-const Context = createContext(undefined);
+const Context = createContext<any>({
+    page: {
+        current: 1,
+        pageSize: 0,
+        total: 0
+    },
+    param: {},
+    dataList: []
+});
 
 type pageType = {
     current: number

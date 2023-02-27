@@ -1,23 +1,30 @@
 /** 表格分页查询组件 - 上侧表单查询 */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import useDeepEffect from "@/hooks/useDeepEffect"
 import { Row, Col, Form, Space, Input, InputNumber, DatePicker, Select, Button }from 'antd';
-// import moment from 'moment';
 import lib from '../../lib';
 
-import AxiosSelect from "../axios-select"
-import FactorySelect from "../factory-select";
-import NumberRange from '../number-range';
+import { TableContext } from "./index";
+
+// import AxiosSelect from "../axios-select"
+// import FactorySelect from "../factory-select";
+// import NumberRange from '../number-range';
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
-function AdvancedSearchForm({ searchConfig, search, cols = 3, clearSearch }){
+function AdvancedSearchForm({
+    searchConfig,
+    cols = 3,
+    clearSearch
+}: AdvancedSearchFormProps){
     const [ expand, setExpand ] = useState(true);                   //搜索栏是否展开，默认展开
     const [ formConfig, setFormConfig ] = useState([])
     const [ specialKeys, setSpecialKeys ] = useState({})
     const [ form ] = Form.useForm();
+
+    const { page, search } = useContext(TableContext)
 
     useEffect(() => {
         if(clearSearch){
@@ -27,8 +34,8 @@ function AdvancedSearchForm({ searchConfig, search, cols = 3, clearSearch }){
 
     useDeepEffect(() => {
         let map = {}
-        let result = []
-        searchConfig.map(item => {
+        let result: any[] = []
+        searchConfig.map((item: any) => {
             if(!item.hidden){
                 switch(item.type){
                     case "DatePicker":
@@ -67,7 +74,7 @@ function AdvancedSearchForm({ searchConfig, search, cols = 3, clearSearch }){
     // }, [])
 
     /** 搜索栏表单项渲染 */
-    function searchItemRender(item){
+    function searchItemRender(item: any){
         switch(item.type){
             case "Input":
                 return <Input maxLength={item.maxLength || 255} />
@@ -80,25 +87,25 @@ function AdvancedSearchForm({ searchConfig, search, cols = 3, clearSearch }){
                 }
                 return <InputNumber style={{width: "100%"}} {...usedProps} />
             }
-            case "Select":
-                return <AxiosSelect 
-                    url={item.url} 
-                    defaultData={item.defaultData}
-                    selectList={item.selectList} 
-                    queryCode={item.queryCode}
-                    usedKey={item.usedKey}
-                    disabled={item.disabled}
-                    selectProps={item.props} 
-                />
-            case "FactorySelect":
-                return <FactorySelect 
-                    url={item.url}
-                    mode={item.mode || null}
-                    usedKey={item.usedKey}
-                    valueKey={item.valueKey}
-                    method={item.method}
-                    defaultData={item.defaultData}
-                />
+            // case "Select":
+            //     return <AxiosSelect 
+            //         url={item.url} 
+            //         defaultData={item.defaultData}
+            //         selectList={item.selectList} 
+            //         queryCode={item.queryCode}
+            //         usedKey={item.usedKey}
+            //         disabled={item.disabled}
+            //         selectProps={item.props} 
+            //     />
+            // case "FactorySelect":
+            //     return <FactorySelect 
+            //         url={item.url}
+            //         mode={item.mode || null}
+            //         usedKey={item.usedKey}
+            //         valueKey={item.valueKey}
+            //         method={item.method}
+            //         defaultData={item.defaultData}
+            //     />
             case "DatePicker": 
                 return <DatePicker style={{width: '100%'}}/>
             case "RangePicker":
@@ -109,7 +116,7 @@ function AdvancedSearchForm({ searchConfig, search, cols = 3, clearSearch }){
     /** 搜索栏渲染 */
     function getFields(){
         const count = expand ? formConfig.length : 2
-        let children = []
+        let children: any = []
 
         formConfig.map((item, index) => {
             if(item.type != "NumberRange"){
@@ -154,11 +161,6 @@ function AdvancedSearchForm({ searchConfig, search, cols = 3, clearSearch }){
     
         return children
     }
-    
-    /** 表单提交事件 */
-    function onFinish(values){
-        search({ ...values })
-    }
 
     function submit(){
         form.validateFields().then((values) => {
@@ -187,7 +189,7 @@ function AdvancedSearchForm({ searchConfig, search, cols = 3, clearSearch }){
                     }
                 }
             }
-            search(result)
+            search({current: 1, pageSize: page.pageSize}, result, true)
         })
     }
 
@@ -215,6 +217,12 @@ function AdvancedSearchForm({ searchConfig, search, cols = 3, clearSearch }){
             </Col>
         </Row>
     </Form>
+}
+
+export type AdvancedSearchFormProps = {
+    searchConfig: object[],
+    cols?: number,
+    clearSearch: number
 }
 
 export default AdvancedSearchForm

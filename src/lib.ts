@@ -1,5 +1,8 @@
 import { message } from 'antd'
+import store from "./store";
 import axios from 'axios'
+
+import { increment, decrement } from './store/needMaskCount'
 
 type requestProps = {
     url: string,
@@ -23,7 +26,7 @@ var lib = {
     getPrefixUrl (env: string) {
         let map = {
             dev: "http://192.168.5.17:8000",    //开发环境，如果要进行本地联调，修改这里的ip即可
-            test: "http://",                    //测试环境
+            test: "",                    //测试环境
             online: "https://",                 //线上
             owner: "http://127.0.0.1:8000"      //后端自测用本地环境
         }
@@ -46,8 +49,11 @@ var lib = {
         if (lib.config.env != "online") {
             prefixUrl = lib.getPrefixUrl(lib.config.env)
         }
+        prefixUrl = ""
     
         const token = window.sessionStorage.getItem("token")
+
+        needMask && store.dispatch(increment())
     
         return axios.request({
             url: url,
@@ -63,17 +69,15 @@ var lib = {
             },
             ...config
         }).then(res => {
-            let { status, data: responseData } = res;
+            let { status, data } = res;
             if (status == 200) {
-                if (responseData.success) {
-                    needMask && this.waitEnd(200);
-                    // needMask && store.dispatch(decrement())
-                    success(responseData.data, res)
-                    showMsg && message.success(responseData.msg);
+                if (data.success) {
+                    needMask && setTimeout(() => store.dispatch(decrement()), 300)
+                    success(data.data, res)
+                    showMsg && message.success(data.msg);
                 }
                 else {
                     fail(res);
-                    needMask && this.waitEnd(200);
                     const errCode = res.data?.code
                     // if (errCode == 403) {
                     //     store.dispatch(setErrStatus(403))
@@ -100,8 +104,9 @@ var lib = {
             const { response: errResponse = {} } = err
             const { status: errStatus, data: errData = {} } = errResponse
             /** 优先读接口返回的状态码，如果没有则取axios自己的状态码 */
-            needMask && this.waitEnd(200);
+            // needMask && this.waitEnd(200);
             console.warn(err)
+            needMask && store.dispatch(decrement())
             if (err.code == "ERR_NETWORK" || err.code == "ECONNABORTED") {
                 return message.error("网络连接异常")
             }

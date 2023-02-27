@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import App from './App';
 import store from './store';
 
+import './mock'
+
 import './index.less';
 import 'antd/dist/reset.css';
 
