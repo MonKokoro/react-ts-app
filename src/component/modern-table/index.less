@@ -1,9 +1,46 @@
 .modern-table{
-    .page-table-search-form{
+    .search-form{
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+
         background-color: white;
         padding: 24px 24px 12px 24px;
         margin-bottom: 16px;
         box-shadow: 0px 0px 4px #d4d4d4;
+        // box-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+        .form-item{
+            margin: 0 12px;
+            height: 48px;
+            .ant-form-item{
+                margin-bottom: 12px;
+            }
+            opacity: 1;
+
+            transition: opacity 0.3s ease-in-out;
+        }
+        .form-item-notshow{
+            opacity: 0;
+        }
+        .buttons{
+            position: absolute;
+            width: 340px;
+            text-align: right;
+            right: 36px;
+            bottom: 24px;
+            .icon{
+                transition: all 0.2s ease-in-out;
+            }
+            .icon-no-expand{
+                transform: rotateZ(180deg);
+            }
+        }
+        max-height: 210px;
+        transition: all 0.3s ease-in-out;
+    }
+    .search-form-no-expand{
+        max-height: 80px;
+        overflow: hidden;
     }
     .page-table-data{
         .top-selected{
@@ -17,6 +54,9 @@
         table{
             table-layout: auto !important;
         }
+        .ant-table-expanded-row-fixed{
+            width: auto !important
+        }
     }
     .content-table-pagination{
         background-color: white;
@@ -24,5 +64,21 @@
         box-shadow: 0px 0px 4px #d4d4d4;
         text-align: right;
         padding: 16px;
+    }
+    .content-fixed-pagination{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        background-color: white;
+        box-shadow: 2px 0px 4px #d4d4d4;
+        text-align: right;
+        padding: 16px 48px 16px 0;
+    }
+
+
+
+    .item-fade-enter-done{
+        visibility: hidden;
     }
 }

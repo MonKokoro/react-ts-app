@@ -6,11 +6,18 @@ export const needMaskCountSlice = createSlice({
     name: 'needMaskCount',
     initialState: 0,
     reducers: {
-        increment: (state) => (state + 1),
-        decrement: (state) => (state - 1),
+        addMask: (state) => {
+            return state + 1
+        },
+        decreaseMask: (state) => {
+            if(state <= 0)
+                return 0
+            return state - 1
+        },
+        resetMask: () => { return 0 }
     },
 })
 
-export const { increment, decrement } = needMaskCountSlice.actions
+export const { addMask, decreaseMask, resetMask } = needMaskCountSlice.actions
 
 export default needMaskCountSlice.reducer;

@@ -2,7 +2,7 @@ import { message } from 'antd'
 import store from "./store";
 import axios from 'axios'
 
-import { increment, decrement } from './store/needMaskCount'
+import { addMask, decreaseMask } from './store/needMaskCount'
 
 type requestProps = {
     url: string,
@@ -53,7 +53,7 @@ var lib = {
     
         const token = window.sessionStorage.getItem("token")
 
-        needMask && store.dispatch(increment())
+        needMask && store.dispatch(addMask())
     
         return axios.request({
             url: url,
@@ -72,7 +72,7 @@ var lib = {
             let { status, data } = res;
             if (status == 200) {
                 if (data.success) {
-                    needMask && setTimeout(() => store.dispatch(decrement()), 300)
+                    needMask && setTimeout(() => store.dispatch(decreaseMask()), 100)
                     success(data.data, res)
                     showMsg && message.success(data.msg);
                 }
@@ -106,7 +106,7 @@ var lib = {
             /** 优先读接口返回的状态码，如果没有则取axios自己的状态码 */
             // needMask && this.waitEnd(200);
             console.warn(err)
-            needMask && store.dispatch(decrement())
+            needMask && store.dispatch(decreaseMask())
             if (err.code == "ERR_NETWORK" || err.code == "ECONNABORTED") {
                 return message.error("网络连接异常")
             }

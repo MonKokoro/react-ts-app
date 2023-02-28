@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { DownOutlined } from '@ant-design/icons';
 import './menu.less'
 
+import store from "./store";
+import { resetMask } from './store/needMaskCount'
+
 interface MenuItem {
     iconUrl: string
     name: string
@@ -87,7 +90,8 @@ function Menu() {
                     <div className={`sub-menu ${expand ? "sub-menu-close" : ""}`}>
                         {item.children.map(subItem => {
                             const focus = focusMenuUrl === subItem.url
-                            return <Link to={subItem.url} key={subItem.url}>
+                            // 切换路由时，重置蒙版计数状态
+                            return <Link to={subItem.url} key={subItem.url} onClick={() => store.dispatch(resetMask())}>
                                 <div 
                                     className={`menu-item sub-menu-item ${focus ? "menu-item-focus" : "menu-item-unfocus"} ${expand ? "sub-menu-item-close" : ""}`}
                                 >

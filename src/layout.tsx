@@ -68,7 +68,7 @@ function Layout () {
                 <div className="content">
                     <CSSTransition
                         in={maskCount ? true : false}
-                         timeout={200}
+                        timeout={200}
                         classNames="mask-fade"
                         unmountOnExit
                     >

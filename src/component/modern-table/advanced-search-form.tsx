@@ -1,8 +1,10 @@
 /** 表格分页查询组件 - 上侧表单查询 */
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { UpOutlined } from '@ant-design/icons'
+import { CSSTransition } from "react-transition-group";
 import useDeepEffect from "@/hooks/useDeepEffect"
-import { Row, Col, Form, Space, Input, InputNumber, DatePicker, Select, Button }from 'antd';
+import { Form, Space, Input, InputNumber, DatePicker, Select, Button }from 'antd';
 import lib from '../../lib';
 
 import { TableContext } from "./index";
@@ -19,6 +21,7 @@ function AdvancedSearchForm({
     cols = 3,
     clearSearch
 }: AdvancedSearchFormProps){
+    const formDivRef = useRef()
     const [ expand, setExpand ] = useState(true);                   //搜索栏是否展开，默认展开
     const [ formConfig, setFormConfig ] = useState([])
     const [ specialKeys, setSpecialKeys ] = useState({})
@@ -117,45 +120,43 @@ function AdvancedSearchForm({
     function getFields(){
         const count = expand ? formConfig.length : 2
         let children: any = []
-
+        let showCount = 0
+        
         formConfig.map((item, index) => {
-            if(item.type != "NumberRange"){
-                children.push(<Col span={(index < count) ? 24/cols : 0} key={index}>
-                    <Form.Item name={item.name} label={item.label}>
-                        {searchItemRender(item)}
-                    </Form.Item>
-                </Col>)
-            }
-            else{
-                let usedProps = {}
-                //limit使用方法：[0, 1000000]
-                if(item.limit){
-                    usedProps["min"] = item["limit"][0]
-                    usedProps["max"] = item["limit"][1]
+            
+            if(!item.hidden){
+                // hidden与notShow不同：hidden表示在表单层级隐藏，不会提交；notShow表示视图上隐藏，有值时会提交
+                const notShow = (!expand && children.length >= 1)
+                const maxSpan = item.span ? (item.span > cols ? cols : item.span) : 1
+                const itemStyle = {
+                    flexBasis: `calc(${100/cols*maxSpan}% - 24px)`,
+                    maxWidth: `calc(${100/cols*maxSpan}% - 24px)`
                 }
-                children.push(<Col span={(index < count) ? 24/cols : 0} key={index}>
-                    <Form.Item label={item.label}>
-                        <Input.Group compact style={{width: "100%"}}>
-                            <Form.Item name={item.name[0]} style={{width: "calc(50% - 15px)", marginBottom: 0}}>
-                                <InputNumber style={{width: "100%"}} {...usedProps}/>
-                            </Form.Item>
-                            <Input
-                                className="site-input-split"
-                                style={{
-                                    width: 30,
-                                    borderLeft: 0,
-                                    borderRight: 0,
-                                    pointerEvents: 'none',
-                                }}
-                                placeholder="~"
-                                readOnly
-                            />
-                            <Form.Item name={item.name[1]} style={{width: "calc(50% - 15px)", marginBottom: 0}}>
-                                <InputNumber style={{width: "100%", borderLeft: "none"}} {...usedProps}/>
-                            </Form.Item>
-                        </Input.Group>
-                    </Form.Item>
-                </Col>)
+                // children.push(<div className={`form-item`} style={itemStyle}>
+                //     <Form.Item name={item.name} label={item.label}>
+                //         {searchItemRender(item)}
+                //     </Form.Item>
+                // </div>
+                // )
+                children.push(<CSSTransition
+                    key={index}
+                    in={(expand || showCount == 0) ? false : true}
+                    timeout={300}
+                    classNames="item-fade"
+                >
+                    <div className={`form-item ${notShow ? "form-item-notshow" : ""}`} style={itemStyle}>
+                        <Form.Item name={item.name} label={item.label}>
+                            {searchItemRender(item)}
+                        </Form.Item>
+                    </div>
+                </CSSTransition>
+                )
+                showCount++
+                // children.push(<Col span={(index < count) ? 24/cols : 0} key={index}>
+                //     <Form.Item name={item.name} label={item.label}>
+                //         {searchItemRender(item)}
+                //     </Form.Item>
+                // </Col>)
             }
         })
     
@@ -192,16 +193,29 @@ function AdvancedSearchForm({
             search({current: 1, pageSize: page.pageSize}, result, true)
         })
     }
-
-    const buttonSpan = (formConfig.length % cols) ? (cols - formConfig.length % cols) : cols //按钮控件的占用列
-    const needExpandCount = cols - 1 //需要展开的搜索项数量阈值
     
-    return <Form
+    return (formConfig.length ? <Form
         form={form}
         name="advanced_search"
-        className="page-table-search-form"
+        // className="page-table-search-form"
     >
-        <Row gutter={24}>
+        <div className={`search-form ${!expand && "search-form-no-expand"}`} ref={formDivRef}>
+            {getFields()}
+            <div className="buttons">
+                <Space>
+                    {formConfig.length > (cols - 1) && <Button type='link' onClick={() => { setExpand(!expand) }}>
+                        <UpOutlined className={`icon ${!expand && "icon-no-expand"}`}/> 
+                        {expand ? "收起" : "展开"}
+                    </Button>}
+                    <Button type="primary" onClick={() => submit()}>查询</Button>
+                    <Button onClick={() => { 
+                        form.resetFields() 
+                        search({})
+                    }}>重置</Button>
+                </Space>
+            </div>
+        </div>
+        {/* <Row gutter={24}>
             {getFields()}
             <Col span={(!expand && formConfig.length > needExpandCount) ? 24 / cols : 24 / cols * buttonSpan} style={{ textAlign: 'right' }}>
                 <Space>
@@ -210,13 +224,16 @@ function AdvancedSearchForm({
                         form.resetFields() 
                         search({})
                     }}>重置</Button>
-                    {/* {formConfig.length > needExpandCount && <a style={{ fontSize: 12 }} onClick={() => { setExpand(!expand) }}>
-                        {expand ? <UpOutlined /> : <DownOutlined />} {expand ? "收起" : "展开"}
-                    </a>} */}
                 </Space>
             </Col>
-        </Row>
-    </Form>
+        </Row> */}
+    </Form> : <></>)
+}
+
+export type searchConfigProps = {
+    type: "Input" | "Select" | "DatePicker"
+    label: string
+    name: string
 }
 
 export type AdvancedSearchFormProps = {

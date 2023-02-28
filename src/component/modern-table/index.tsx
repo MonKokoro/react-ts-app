@@ -1,4 +1,5 @@
 import React, { useState, useImperativeHandle, useRef, ReactNode, useContext, createContext } from 'react';
+import { Pagination } from 'antd';
 import useDeepEffect from "@/hooks/useDeepEffect"
 import AdvancedSearchForm from "./advanced-search-form";
 import TableContent, { leftButtonListProps, rowSelectProps, expandProps } from "./table-content"
@@ -29,13 +30,14 @@ function ModernTable({
     defaultData = {}, 
     
     rowKey = "id",
-    column = [],
+    columns = [],
     scroll = {},
     topRender,
     leftButtonList = [],
     rowSelect,
     rowDisabled,
     expand,
+    paginationFixed = true,
     
     tableProps = {}
 }: ModernTableProps){
@@ -60,13 +62,13 @@ function ModernTable({
     }, [defaultData])
 
     useDeepEffect(() => {
-        const result: any = column.reduce((prev: object[], curr: any) => {
+        const result: any = columns.reduce((prev: object[], curr: any) => {
             if (!curr.hidden)
                 prev.push(curr);
             return prev;
         }, [])
         setUsedColumn(result);
-    }, [column])
+    }, [columns])
 
     useImperativeHandle(ref, () => ({
         /** 搜索方法 */
@@ -152,7 +154,7 @@ function ModernTable({
                 clearSearch={clearSearch}
             /> : ''}
             <TableContent 
-                column={usedColumn} 
+                columns={usedColumn} 
                 rowKey={rowKey}
                 leftButtonList={leftButtonList} 
                 rowSelect={rowSelect} 
@@ -160,9 +162,24 @@ function ModernTable({
                 rowDisabled={rowDisabled}
                 scroll={scroll}
                 topRender={topRender}
+                paginationFixed={paginationFixed}
 
                 tableProps={tableProps}
             />
+            <div className={paginationFixed ? "content-fixed-pagination" : "content-table-pagination"}>
+                <Pagination 
+                    current={page.current || 1} 
+                    total={page.total || 0} 
+                    pageSize={page.pageSize || 5}
+                    showTotal={total => `共 ${total} 条`}
+                    pageSizeOptions={["5", "10", "20", "50", "100"]}
+                    showSizeChanger
+					showQuickJumper
+                    onChange={(current, pageSize) => search({current, pageSize}, param, false)}
+                    defaultCurrent={1}
+                    defaultPageSize={5}
+                />
+            </div>
         </TableContext.Provider>
     </div>
 }
@@ -176,13 +193,14 @@ export type ModernTableProps = {
     url: string
     defaultData?: object
     rowKey?: string
-    column: object[]
+    columns: object[]
     scroll?: { x?: number, y?: number }
     topRender?: ReactNode
     leftButtonList?: leftButtonListProps[]
     rowSelect?: rowSelectProps | boolean
     rowDisabled?: () => boolean
     expand?: expandProps | false
+    paginationFixed?: boolean
     tableProps?: object
 }
 
