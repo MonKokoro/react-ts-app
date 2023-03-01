@@ -51,9 +51,10 @@ function ModernTable({
     })
     const [ param, setParam ] = useState<object>({})
     const [ dataList, setDataList ] = useState<object[]>([])
+    const [ loading, setLoading ] = useState<boolean>(false)
 
-    const [ selectedKeysMap, addKeys, deleteKeys, clearKeys ] = useSelectedKeysMap()
-    const [ expandSelectedKeysMap, setExpandKeys, clearExpandKeys ] = useExpandSelectedKeysMap()
+    const { selectedKeysMap, selectedCount, addKeys, deleteKeys, clearKeys } = useSelectedKeysMap(rowKey)
+    const { expandSelectedKeysMap, expandSelectedRowsMap, expandSelectedCount, setExpandKeys, clearExpandKeys } = useExpandSelectedKeysMap(expand ? expand.rowKey : "id")
 
     const [ clearSearch, setClearSearch ] = useState(0)
 
@@ -86,15 +87,16 @@ function ModernTable({
         getSelectedKeysMap: () => { return selectedKeysMap },
         /** 获取子表已选中的key值数组 */
         getExpandSelectedKeys: () => {
-            const expandMap = actionRef.current.getExpandSelectedKeysMap() || {}
             let expand = []
-            for(let key in expandMap){
-                expand.push(expandMap[key].keys)
+            for(let key in expandSelectedKeysMap){
+                expand.push(expandSelectedKeysMap[key])
             }
             return expand
         },
         /** 获取子表已选中的key值映射 */
         getExpandSelectedKeysMap: () => { return expandSelectedKeysMap },
+        /** 获取子表已选中的完整数据映射 */
+        getExpandSelectedRowsMap: () => { return expandSelectedRowsMap },
         /** 设置已选中的key值 */
         /** 注意！如果仅传入key值列表，那由于无法取到本行的详细数据，映射表中对应的行将被占位符替代 */
         /** 因此本方法并不安全，在某些复杂或坑爹需求下可能会产生一些奇怪的问题 */
@@ -115,10 +117,10 @@ function ModernTable({
     }))
 
     function search(page: { current: number, pageSize: number }, param: object, clear: boolean){
+        setLoading(true)
         lib.request({
             url,
             method,
-            needMask: true,
             data: {
                 ...param,
                 pageNum: page.current || 1,
@@ -126,13 +128,15 @@ function ModernTable({
                 ...defaultData
             },
             success: (data: any) => {
+                setTimeout(() => setLoading(true), 300)
                 setPage(data.page)
                 setParam(param)
                 setDataList(data.list)
                 if(clear){
 
                 }
-            }
+            },
+            fail: () => setTimeout(() => setLoading(true), 300)
         })
     }
 
@@ -145,8 +149,19 @@ function ModernTable({
                 setParam,
                 dataList,
                 setDataList,
+                loading,
 
-                search
+                search,
+
+                selectedCount,
+                addKeys,
+                deleteKeys,
+                clearKeys,
+
+                expandSelectedCount,
+                expandSelectedKeysMap,
+                setExpandKeys,
+                clearExpandKeys
             }}
         >
             {searchConfig.length ? <AdvancedSearchForm 
@@ -198,10 +213,22 @@ export type ModernTableProps = {
     topRender?: ReactNode
     leftButtonList?: leftButtonListProps[]
     rowSelect?: rowSelectProps | boolean
-    rowDisabled?: () => boolean
+    rowDisabled?: (record: any) => boolean
     expand?: expandProps | false
     paginationFixed?: boolean
     tableProps?: object
+}
+
+export type ModernTableRef = {
+    search: () => void;
+    reset: () => void;
+    getSearchingValues: () => object;
+    clearSearch: () => void;
+    getSelectedKeys: () => string[];
+    getSelectedKeysMap: () => any;
+    getExpandSelectedKeys: () => any[];
+    getExpandSelectedKeysMap: () => any;
+    getExpandSelectedRowsMap: () => any;
 }
 
 export { TableContext }

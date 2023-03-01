@@ -35,9 +35,6 @@ function ContextProvider({ children, url, method, defaultData, clearSelected }: 
     const [ param, setParam ] = useState<object>({})
     const [ dataList, setDataList ] = useState<object[]>([])
 
-    const [ selectedKeysMap, addKeys, deleteKeys, clearKeys ] = useSelectedKeysMap()
-    const [ expandSelectedKeysMap, setExpandKeys, clearExpandKeys ] = useExpandSelectedKeysMap()
-
     function search(page: pageType, param: object, clear: boolean){
         lib.request({
             url,

@@ -14,6 +14,7 @@
         "cv": "铃代纱弓",
         "performanceExperience": [
             {
+                "id": 1,
                 "date": "2023-2-27",
                 "place": "演出厅",
                 "name": "xx公演"
@@ -28,6 +29,7 @@
         "cv": "长谷川育美",
         "performanceExperience": [
             {
+                "id": 1,
                 "date": "2023-2-27",
                 "place": "演出厅",
                 "name": "xx公演"
@@ -42,6 +44,7 @@
         "cv": "水野朔",
         "performanceExperience": [
             {
+                "id": 1,
                 "date": "2023-2-27",
                 "place": "演出厅",
                 "name": "xx公演"
