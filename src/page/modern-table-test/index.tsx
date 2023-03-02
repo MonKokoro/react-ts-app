@@ -16,6 +16,7 @@ function ModernTableTest() {
             type: "Input",
             label: "成员名称",
             name: "name",
+            span: 3
         },
         {
             type: "Input",

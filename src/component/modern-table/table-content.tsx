@@ -22,6 +22,7 @@ function TableContent({
     const [ expandTableProps, setExpandTableProps ] = useState<any>() //表格展开配置
     const [ rowSelectionProps, setRowSelectionProps ] = useState<any>() //表格多选配置
     const {
+        loading,
         dataList,
         selectedCount,
         addKeys,
@@ -176,6 +177,7 @@ function TableContent({
             <Table
                 rowKey={rowKey}
                 className={`${(topRender || leftButtonList) ? "content-table-padding" : ""} common-content-table`}
+                loading={loading}
                 columns={columns}
                 pagination={false}
                 dataSource={dataList}

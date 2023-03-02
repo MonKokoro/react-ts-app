@@ -128,15 +128,16 @@ function ModernTable({
                 ...defaultData
             },
             success: (data: any) => {
-                setTimeout(() => setLoading(true), 300)
+                setTimeout(() => setLoading(false), 300)
                 setPage(data.page)
                 setParam(param)
                 setDataList(data.list)
                 if(clear){
-
+                    clearKeys()
+                    clearExpandKeys()
                 }
             },
-            fail: () => setTimeout(() => setLoading(true), 300)
+            fail: () => setTimeout(() => setLoading(false), 300)
         })
     }
 
@@ -202,6 +203,7 @@ export type searchConfigProps = {
 
 }
 export type ModernTableProps = {
+    type?: "page" | "component"
     actionRef: any
     searchConfig?: searchConfigProps[]
     method?: "GET" | "POST"

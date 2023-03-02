@@ -22,7 +22,7 @@ function AdvancedSearchForm({
     clearSearch
 }: AdvancedSearchFormProps){
     const formDivRef = useRef()
-    const [ expand, setExpand ] = useState<boolean>(true); //搜索栏是否展开，默认展开
+    const [ expand, setExpand ] = useState<boolean>(false); //搜索栏是否展开，默认展开
     const [ formDivHeight, setFormDivHeight ] = useState<number>()
     const [ formConfig, setFormConfig ] = useState([]) //
     const [ specialKeys, setSpecialKeys ] = useState({})
@@ -132,29 +132,55 @@ function AdvancedSearchForm({
     /** 搜索栏渲染 */
     function getFields(){
         let children: any = []
-        
+        let first = true
+        let spanCount = 0
         formConfig.map((item, index) => {
-            
             if(!item.hidden){
-                const maxSpan = item.span ? (item.span > cols ? cols : item.span) : 1
+                let maxSpan = item.span || 1
+                if(expand && item.span > cols){
+                    maxSpan = cols
+                }
+                // 跨列的计数
+                spanCount += maxSpan
+                if(!expand && item.span > cols - 1){
+                    maxSpan = cols - 1
+                }
                 const itemStyle = {
                     flexBasis: `calc(${100/cols*maxSpan}% - 24px)`,
                     maxWidth: `calc(${100/cols*maxSpan}% - 24px)`
                 }
                 children.push(<CSSTransition
                     key={index}
-                    in={expand ? false : true}
+                    in={(expand && !first) ? false : true}
                     timeout={300}
                     classNames="item-fade"
                 >
-                    <div className={`form-item ${!expand ? "form-item-not-show" : ""}`} style={itemStyle}>
+                    <div className={`form-item ${(!expand && !first) ? "form-item-not-show" : ""}`} style={itemStyle}>
                         <Form.Item name={item.name} label={item.label}>
                             {searchItemRender(item)}
                         </Form.Item>
                     </div>
                 </CSSTransition>)
+                first = false
             }
         })
+        // 当跨列计数正好占满整数行时，额外塞一个空的item，让按钮组下移到下一行
+        if(spanCount % cols == 0){
+            const itemStyle = {
+                flexBasis: `calc(${100/cols}% - 24px)`,
+                maxWidth: `calc(${100/cols}% - 24px)`
+            }
+            children.push(<CSSTransition
+                key={formConfig.length}
+                in={expand ? false : true}
+                timeout={300}
+                classNames="item-fade"
+            >
+                <div className={`form-item ${!expand ? "form-item-not-show" : ""}`} style={itemStyle}>
+                    
+                </div>
+            </CSSTransition>)
+        }
     
         return children
     }
@@ -190,7 +216,7 @@ function AdvancedSearchForm({
         })
     }
     
-    return (formConfig.length ? <Form
+    return <Form
         form={form}
         name="advanced_search"
     >
@@ -210,7 +236,7 @@ function AdvancedSearchForm({
                 </Space>
             </div>
         </div>
-    </Form> : <></>)
+    </Form>
 }
 
 export type searchConfigProps = {
