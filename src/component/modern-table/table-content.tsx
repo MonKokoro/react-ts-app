@@ -147,7 +147,7 @@ function TableContent({
     }
     
     return <div className='page-table-data'>
-        { (topRender && columns.length) ? <div className='top-render'>{topRender}</div> : '' }
+        { topRender ? <div className='top-render'>{topRender}</div> : '' }
         { (leftButtonList.length || rowSelect || (expand && expand.rowSelect)) && <div className='button-render'>
             <Space>
                 {leftButtonList.map((item: leftButtonListProps, index: number) => {
