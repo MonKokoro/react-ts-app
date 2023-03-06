@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useContext, ReactNode } from 'react';
+import React, { useState, useContext, ReactNode } from 'react';
+import { SettingOutlined } from '@ant-design/icons'
 import useDeepEffect from '@/hooks/useDeepEffect';
 import { Space, Button, Table, Badge } from 'antd';
-import lib from '../../lib';
 
 import { TableContext } from "./index";
+
+import type { leftButtonListProps, rowSelectProps, expandProps } from './type'
 
 function TableContent({ 
     rowKey = "id",
     columns = [], 
     scroll = {}, 
-    topRender,
     leftButtonList,
     rowSelect,
     rowDisabled,
     expand,
-    paginationFixed,
 
     tableProps = {}
 }: TableContentProps){
@@ -147,9 +147,8 @@ function TableContent({
     }
     
     return <div className='page-table-data'>
-        { topRender ? <div className='top-render'>{topRender}</div> : '' }
-        { (leftButtonList.length || rowSelect || (expand && expand.rowSelect)) && <div className='button-render'>
-            <Space>
+        <div className='top-buttons'>
+            <Space className='left-buttons'>
                 {leftButtonList.map((item: leftButtonListProps, index: number) => {
                     if(!item.hidden){
                         let props = item.props || {}
@@ -172,16 +171,21 @@ function TableContent({
                     }}>清空</a>
                 </>}
             </Space>
-        </div> }
+            <Space className='right-buttons'>
+                <SettingOutlined className='set-button' onClick={() => {}}/>
+            </Space>
+        </div>
         {columns.length ? <div className="content-table">
             <Table
+                sticky={{ offsetHeader: -36 }} /** 减去内边距 */
                 rowKey={rowKey}
-                className={`${(topRender || leftButtonList) ? "content-table-padding" : ""} common-content-table`}
+                className={`common-content-table`}
                 loading={loading}
                 columns={columns}
                 pagination={false}
                 dataSource={dataList}
-                scroll={{y: 320, ...scroll}}
+                // scroll={{y: 390, ...scroll}}
+                scroll={scroll}
                 dataIndex={ rowKey || "key" }
                 rowSelection={rowSelectionProps ? {
                     ...rowSelectionProps,
@@ -195,38 +199,14 @@ function TableContent({
     </div>
 }
 
-export type leftButtonListProps = {
-    text: string,
-    onClick: () => void,
-    hidden?: boolean,
-    type?: "primary" | "ghost" | "dashed" | "link" | "text" | "default"
-    props?: any
-}
-
-export type rowSelectProps = {
-    iconHidden?: (record: any) => boolean
-    props?: any
-}
-
-export type expandProps = {
-    key?: string,
-    columns?: (record: any) => any[],
-    rowKey?: string,
-    rowSelect?: boolean,
-    render?: (record: any) => ReactNode
-    renderable?: (record: any) => boolean
-}
-
 export type TableContentProps = {
     rowKey?: string,
     columns: any[],
     scroll?: {x?: number, y?: number},
-    topRender?: ReactNode,
     leftButtonList?: leftButtonListProps[],
     rowSelect?: rowSelectProps | boolean,
     rowDisabled?: (record: any) => boolean,
     expand?: expandProps | false,
-    paginationFixed?: boolean,
     tableProps?: any
 }
 

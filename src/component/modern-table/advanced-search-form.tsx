@@ -186,7 +186,7 @@ function AdvancedSearchForm({
     }
 
     function submit(){
-        form.validateFields().then((values) => {
+        form.validateFields().then((values: any) => {
             let result = { ...values }
             for(let key in specialKeys){
                 switch(specialKeys[key]){
@@ -237,12 +237,6 @@ function AdvancedSearchForm({
             </div>
         </div>
     </Form>
-}
-
-export type searchConfigProps = {
-    type: "Input" | "Select" | "DatePicker"
-    label: string
-    name: string
 }
 
 export type AdvancedSearchFormProps = {

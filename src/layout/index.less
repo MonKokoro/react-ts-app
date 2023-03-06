@@ -8,28 +8,6 @@
 
     display: flex;
     font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
-    .menu-box{
-        display: flex;
-        flex-grow: 0;
-        flex-direction: column;
-        width: 260px;
-        min-width: 260px;
-        height: 100%;
-        box-shadow: 2px 0 4px #f0f1f2;
-        background: #FFFFFF;
-        z-index: 50;
-        .logo{
-            display: flex;
-            width: 100%;
-            height: 72px;
-            justify-content: center;
-            align-items: center;
-        }
-        .menu{
-            height: calc(100% - 72px);
-            overflow-y: auto;
-        }
-    }
     .content-box{
         position: relative;
         display: flex;
@@ -46,19 +24,65 @@
             background: linear-gradient(to right, #13547a, #80D0A7);
             color: white;
             z-index: 9;
+            
+            transition: all 0.2s ease-in-out;
             .right{
                 display: flex;
                 flex-wrap: nowrap;
                 align-items: center;
-                .skin{
-                    cursor: pointer;
-                    margin-right: 6px;
-                    .skin-icon{
-                        font-size: 24px;
-                    }
-                }
+                // .skin{
+                //     display: flex;
+                //     justify-content: center;
+                //     align-items: center;
+                //     position: relative;
+                //     width: 36px;
+                //     height: 64px;
+                //     margin-right: 6px;
+                //     .skin-icon{
+                //         font-size: 24px;
+                //         cursor: pointer;
+                //     }
+                //     .skin-modal{
+                //         display: flex;
+                //         flex-direction: column;
+                //         position: absolute;
+                //         top: 48px;
+                //         left: 0;
+                //         width: 210px;
+                //         height: 200px;
+                //         padding: 12px;
+                //         color: rgba(0,0,0,0.85);
+                //         background: white;
+                //         box-shadow: -2px 2px 8px #f0f1f2;
+                //         opacity: 0;
+                //         visibility: hidden;
+                //         z-index: 3;
+
+                //         transition: all 0.2s ease-in-out;
+                //         .title{
+                //             font-weight: 600;
+                //             margin-bottom: 12px;
+                //         }
+                //         .content{
+                //             margin-bottom: 12px;
+                //             .color-box{
+                //                 display: inline-block;
+                //                 width: 20px;
+                //                 height: 20px;
+                //                 margin-right: 6px;
+                //                 border-radius: 4px;
+                //                 background: black;
+                //                 cursor: pointer;
+                //             }
+                //         }
+                //     }
+                // }
                 // .skin:hover{
-                //     background: radial-gradient(closest-side at center, rgba(255,255,255,0.3), rgba(255,255,255,0));
+                //     .skin-modal{
+                //         top: 64px;
+                //         opacity: 1;
+                //         visibility: visible;
+                //     }
                 // }
                 .user{
                     display: flex;
@@ -140,6 +164,7 @@
     transform: translate(80px);
     transition: all 0.2s ease-in;
 }
+
 
 
 .mask-fade-enter {

@@ -2,7 +2,8 @@ import React, { useState, useImperativeHandle, useRef, ReactNode, useContext, cr
 import { Pagination } from 'antd';
 import useDeepEffect from "@/hooks/useDeepEffect"
 import AdvancedSearchForm from "./advanced-search-form";
-import TableContent, { leftButtonListProps, rowSelectProps, expandProps } from "./table-content"
+import TableContent from "./table-content"
+import type { searchConfigProps, leftButtonListProps, rowSelectProps, expandProps } from './type'
 
 import useDataList from './hooks/useDataList';
 import useSelectedKeysMap from './hooks/useSelectedKeysMap';
@@ -165,23 +166,24 @@ function ModernTable({
                 clearExpandKeys
             }}
         >
-            {searchConfig.length ? <AdvancedSearchForm 
-                searchConfig={searchConfig}
-                clearSearch={clearSearch}
-            /> : ''}
-            <TableContent 
-                columns={usedColumn} 
-                rowKey={rowKey}
-                leftButtonList={leftButtonList} 
-                rowSelect={rowSelect} 
-                expand={expand}
-                rowDisabled={rowDisabled}
-                scroll={scroll}
-                topRender={topRender}
-                paginationFixed={paginationFixed}
+            <div className="scroll-content">
+                {searchConfig.length ? <AdvancedSearchForm 
+                    searchConfig={searchConfig}
+                    clearSearch={clearSearch}
+                /> : ''}
+                { topRender ? <div className='top-render'>{topRender}</div> : '' }
+                <TableContent 
+                    columns={usedColumn} 
+                    rowKey={rowKey}
+                    leftButtonList={leftButtonList} 
+                    rowSelect={rowSelect} 
+                    expand={expand}
+                    rowDisabled={rowDisabled}
+                    scroll={scroll}
 
-                tableProps={tableProps}
-            />
+                    tableProps={tableProps}
+                />
+            </div>
             <div className={paginationFixed ? "content-fixed-pagination" : "content-table-pagination"}>
                 <Pagination 
                     current={page.current || 1} 
@@ -198,9 +200,6 @@ function ModernTable({
             </div>
         </TableContext.Provider>
     </div>
-}
-export type searchConfigProps = {
-
 }
 export type ModernTableProps = {
     type?: "page" | "component"
