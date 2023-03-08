@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Checkbox, message, Space, Switch } from 'antd';
-import ModernTable from '@/component/modern-table';
+import ModernTable, { searchConfigProps } from '@/component/modern-table';
 import type { ModernTableRef } from '@/component/modern-table';
 import './index.less'
 
@@ -11,7 +11,7 @@ function ModernTableTest() {
     const [ expandSelectable, setExpandSelectable ] = useState<boolean>(false)
     const [ selectable, setSelectable ] = useState<boolean>(false)
 
-    const searchConfig = [
+    const searchConfig: searchConfigProps[] = [
         {
             type: "Input",
             label: "成员名称",
@@ -19,9 +19,12 @@ function ModernTableTest() {
             span: 3
         },
         {
-            type: "Input",
-            label: "成员名称",
-            name: "name",
+            type: "Select",
+            label: "性别",
+            name: "sex",
+            selectList: [
+                { value: 1, desc: "女生" }
+            ]
         },
         {
             type: "Input",

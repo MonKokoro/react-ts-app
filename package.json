@@ -32,6 +32,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/lodash": "^4.14.191",
+    "@types/mockjs": "^1.0.7",
     "@types/react-transition-group": "^4.4.5",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.3",

@@ -4,12 +4,13 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { UpOutlined } from '@ant-design/icons'
 import { CSSTransition } from "react-transition-group";
 import useDeepEffect from "@/hooks/useDeepEffect"
-import { Form, Space, Input, InputNumber, DatePicker, Select, Button }from 'antd';
+import { Form, Space, Input, InputNumber, DatePicker, Select, Button } from 'antd';
+import type { searchConfigProps } from './type';
 import lib from '../../lib';
 
 import { TableContext } from "./index";
 
-// import AxiosSelect from "../axios-select"
+import AxiosSelect from "../axios-select"
 // import FactorySelect from "../factory-select";
 // import NumberRange from '../number-range';
 
@@ -103,16 +104,16 @@ function AdvancedSearchForm({
                 }
                 return <InputNumber style={{width: "100%"}} {...usedProps} />
             }
-            // case "Select":
-            //     return <AxiosSelect 
-            //         url={item.url} 
-            //         defaultData={item.defaultData}
-            //         selectList={item.selectList} 
-            //         queryCode={item.queryCode}
-            //         usedKey={item.usedKey}
-            //         disabled={item.disabled}
-            //         selectProps={item.props} 
-            //     />
+            case "Select":
+                return <AxiosSelect 
+                    url={item.url} 
+                    defaultData={item.defaultData}
+                    selectList={item.selectList} 
+                    queryCode={item.queryCode}
+                    usedKey={item.usedKey}
+                    disabled={item.disabled}
+                    props={item.props} 
+                />
             // case "FactorySelect":
             //     return <FactorySelect 
             //         url={item.url}
@@ -240,7 +241,7 @@ function AdvancedSearchForm({
 }
 
 export type AdvancedSearchFormProps = {
-    searchConfig: object[],
+    searchConfig: searchConfigProps[],
     cols?: number,
     clearSearch: number
 }

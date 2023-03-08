@@ -35,6 +35,9 @@ export type searchConfigProps = {
     type: "Input" | "Select" | "DatePicker"
     label: string
     name: string
+    span?: number
+    url?: string
+    selectList?: { value: any, desc: string }[]
 }
 
 export type leftButtonListProps = {

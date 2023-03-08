@@ -3,7 +3,7 @@ import { Pagination } from 'antd';
 import useDeepEffect from "@/hooks/useDeepEffect"
 import AdvancedSearchForm from "./advanced-search-form";
 import TableContent from "./table-content"
-import type { searchConfigProps, leftButtonListProps, rowSelectProps, expandProps } from './type'
+import type { ModernTableRef, searchConfigProps, leftButtonListProps, rowSelectProps, expandProps } from './type'
 
 import useDataList from './hooks/useDataList';
 import useSelectedKeysMap from './hooks/useSelectedKeysMap';
@@ -220,17 +220,7 @@ export type ModernTableProps = {
     tableProps?: object
 }
 
-export type ModernTableRef = {
-    search: () => void;
-    reset: () => void;
-    getSearchingValues: () => object;
-    clearSearch: () => void;
-    getSelectedKeys: () => string[];
-    getSelectedKeysMap: () => any;
-    getExpandSelectedKeys: () => any[];
-    getExpandSelectedKeysMap: () => any;
-    getExpandSelectedRowsMap: () => any;
-}
+export type { ModernTableRef, searchConfigProps, leftButtonListProps, rowSelectProps, expandProps }
 
 export { TableContext }
 export default ModernTable

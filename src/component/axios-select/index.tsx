@@ -8,7 +8,6 @@ import lib from "../../lib";
 const { Option } = Select
 
 /**
- * 
  * @param url 下拉数据通过接口获取
  * @param usedKey 下拉列表id与name对应字段。默认["value", "desc"]
  * @param queryCode 当下拉数据通过字典获取，字典对应code值。设置后url、defaultData、method失效
@@ -48,6 +47,7 @@ function AxiosSelect({
     }, [selectList])
 
     function getSelectList(){
+        /** 若您的系统中存在数据字典模块，也可以通过简单的方式获取数据，不必重复配置defaultData */
         if(queryCode){
             return lib.request({
                 url: "/",
@@ -55,15 +55,6 @@ function AxiosSelect({
                 method: "GET",
                 success: (res: any) => {
                     setUsedList(res)
-                    // setUsedList(
-                    //     res.reduce((prev: any[], curr: { value: number | string, desc: number | string }) => {
-                    //         prev.push({ 
-                    //             value: curr.value, 
-                    //             desc: curr.desc
-                    //         })
-                    //         return prev
-                    //     }, [])
-                    // )
                 },
             })
         }
@@ -81,7 +72,7 @@ function AxiosSelect({
 
     return <Select 
         value={useValue}
-        onChange={(value, option) => { 
+        onChange={(value) => { 
             setUseValue(value)
             onChange(value)
         }}
