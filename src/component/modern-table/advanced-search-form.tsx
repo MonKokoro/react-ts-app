@@ -1,20 +1,20 @@
-/** 表格分页查询组件 - 上侧表单查询 */
+/** 表格分页查询组件 - 条件模块 */
 
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { UpOutlined } from '@ant-design/icons'
 import { CSSTransition } from "react-transition-group";
+import dayjs from 'dayjs';
 import useDeepEffect from "@/hooks/useDeepEffect"
-import { Form, Space, Input, InputNumber, DatePicker, Select, Button } from 'antd';
+import { Form, Space, Input, InputNumber, DatePicker, Button } from 'antd';
 import type { searchConfigProps } from './type';
 import lib from '../../lib';
 
 import { TableContext } from "./index";
 
 import AxiosSelect from "../axios-select"
-// import FactorySelect from "../factory-select";
+import SearchSelect from "../search-select";
 // import NumberRange from '../number-range';
 
-const { Option } = Select
 const { RangePicker } = DatePicker
 
 function AdvancedSearchForm({
@@ -22,13 +22,14 @@ function AdvancedSearchForm({
     cols = 3,
     clearSearch
 }: AdvancedSearchFormProps){
-    const formDivRef = useRef()
-    const [ expand, setExpand ] = useState<boolean>(false); //搜索栏是否展开，默认展开
-    const [ formDivHeight, setFormDivHeight ] = useState<number>()
-    const [ formConfig, setFormConfig ] = useState([]) //
-    const [ specialKeys, setSpecialKeys ] = useState({})
-    const [ form ] = Form.useForm();
+    // 与渲染无关的内容保存在ref中
+    const convertMap = useRef()
+    const transformMap = useRef()
 
+    const [ expand, setExpand ] = useState<boolean>(false); //搜索栏是否展开，默认展开
+    const [ formConfig, setFormConfig ] = useState([])
+
+    const [ form ] = Form.useForm();
     const { page, search } = useContext(TableContext)
 
     useEffect(() => {
@@ -37,73 +38,56 @@ function AdvancedSearchForm({
         }
     }, [clearSearch])
 
-    useEffect(() => {
-        // 由于transition动画效果对height为auto的目标没有效果，因此通过js获取目标的高度是必须的
-        // 改变maxHeight确实也可以实现动画效果，但该效果并不完美
-        // if(expand){
-        //     if(formDivRef.current)
-        //         setFormDivHeight(formDivRef.current["clientHeight"])
-        // }
-        // else{
-        //     setFormDivHeight(80)
-        // }
-    }, [expand])
-
     useDeepEffect(() => {
-        let map = {}
         let result: any[] = []
+        let convert: any = {}, transform: any = {}
         searchConfig.map((item: any) => {
             if(!item.hidden){
+                /** 部分表单项类型，将会预置一部分传值变更方法 */
                 switch(item.type){
                     case "DatePicker":
-                        map[item.name] = "DatePicker"
+                        convert[item.name] = (value: string) => {
+                            return dayjs(value)
+                        }
+                        transform[item.name] = (value: any) => {
+                            return {
+                                [item.name]: value.format("YYYY-MM-DD")
+                            }
+                        }
                         break
                     case "RangePicker":
-                        map[`${item.name[0]}_${item.name[1]}`] = "RangePicker"
+                        convert[item.name[0]] = (_: any, param: any) => {
+                            return {
+                                [item.name[0]]: dayjs(param[item.name[0]]),
+                                [item.name[1]]: dayjs(param[item.name[1]])
+                            }
+                        }
+                        transform[`${item.name[0]}_${item.name[1]}`] = (value: any) => {
+                            // 推测：触发该方法时，item.name已经被修改，因此需要重新分隔一遍
+                            const names = item.name.split('_')
+                            return {
+                                [names[0]]: value[0].format("YYYY-MM-DD"),
+                                [names[1]]: value[1].format("YYYY-MM-DD")
+                            }
+                        }
                         item.name = `${item.name[0]}_${item.name[1]}`
                         break
-                    case "FactorySelect":
-                        map[item.name] = "FactorySelect"
+                    // case "FactorySelect":
+                    //     map[item.name] = "FactorySelect"
                 }
                 result.push(item)
             }
         })
-        setSpecialKeys(map)
+        convertMap.current = convert
+        transformMap.current = transform
         setFormConfig(result)
     }, [searchConfig])
-
-    // const formConfig = useMemo(() => {
-    //     let map = {}
-    //     let result = []
-    //     searchConfig.map(item => {
-    //         if(!item.hidden){
-    //             result.push(item)
-    //             switch(item.type){
-    //                 case "DatePicker":
-    //                     map[item.name] = "DatePicker"
-    //                 case "RangePicker":
-    //                     map[item.name] = "RangePicker"
-    //             }
-    //         }
-    //     })
-    //     setSpecialKeys(map)
-    //     return result
-    // }, [])
 
     /** 搜索栏表单项渲染 */
     function searchItemRender(item: any){
         switch(item.type){
             case "Input":
                 return <Input maxLength={item.maxLength || 255} />
-            case "InputNumber": {
-                let usedProps = {}
-                //limit使用方法：[0, 1000000]
-                if(item.limit){
-                    usedProps["min"] = item["limit"][0]
-                    usedProps["max"] = item["limit"][1]
-                }
-                return <InputNumber style={{width: "100%"}} {...usedProps} />
-            }
             case "Select":
                 return <AxiosSelect 
                     url={item.url} 
@@ -114,15 +98,15 @@ function AdvancedSearchForm({
                     disabled={item.disabled}
                     props={item.props} 
                 />
-            // case "FactorySelect":
-            //     return <FactorySelect 
-            //         url={item.url}
-            //         mode={item.mode || null}
-            //         usedKey={item.usedKey}
-            //         valueKey={item.valueKey}
-            //         method={item.method}
-            //         defaultData={item.defaultData}
-            //     />
+            case "SearchSelect":
+                return <SearchSelect 
+                    url={item.url}
+                    // mode={item.mode || null}
+                    usedKey={item.usedKey}
+                    valueKey={item.valueKey}
+                    method={item.method}
+                    defaultData={item.defaultData}
+                />
             case "DatePicker": 
                 return <DatePicker style={{width: '100%'}}/>
             case "RangePicker":
@@ -189,28 +173,10 @@ function AdvancedSearchForm({
     function submit(){
         form.validateFields().then((values: any) => {
             let result = { ...values }
-            for(let key in specialKeys){
-                switch(specialKeys[key]){
-                    case "DatePicker": {
-                        if(result[key]){
-                            result[key] = result[key].format('yyyy-MM-DD')
-                        }
-                        break
-                    }
-                    case "RangePicker": {
-                        let usedKeys = key.split('_')
-                        if(result[key]){
-                            result[usedKeys[0]] = result[key] ? result[key][0] ?.format('yyyy-MM-DD') : ''
-                            result[usedKeys[1]] = result[key] ? result[key][1] ?.format('yyyy-MM-DD') : ''
-                            delete result[key]
-                        }
-                        break
-                    }
-                    case "FactorySelect": {
-                        if(result[key]){
-                            result[key] = result[key].id
-                        }
-                    }
+            const transform = transformMap.current || {}
+            for(let key in transform){
+                if(result[key]){
+                    result = { ...result, ...transform[key](result[key]) }
                 }
             }
             search({current: 1, pageSize: page.pageSize}, result, true)
@@ -221,7 +187,7 @@ function AdvancedSearchForm({
         form={form}
         name="advanced_search"
     >
-        <div className={`search-form ${!expand ? "search-form-no-expand" : ''}`} ref={formDivRef}>
+        <div className={`search-form ${!expand ? "search-form-no-expand" : ''}`}>
             {getFields()}
             <div className="buttons">
                 <Space>

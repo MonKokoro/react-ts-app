@@ -1,3 +1,5 @@
+/** 表格分页查询组件 */
+
 import React, { useState, useImperativeHandle, useRef, ReactNode, useContext, createContext } from 'react';
 import { Pagination } from 'antd';
 import useDeepEffect from "@/hooks/useDeepEffect"
@@ -5,7 +7,6 @@ import AdvancedSearchForm from "./advanced-search-form";
 import TableContent from "./table-content"
 import type { ModernTableRef, searchConfigProps, leftButtonListProps, rowSelectProps, expandProps } from './type'
 
-import useDataList from './hooks/useDataList';
 import useSelectedKeysMap from './hooks/useSelectedKeysMap';
 import useExpandSelectedKeysMap from './hooks/useExpandSelectedKeysMap';
 
@@ -16,12 +17,23 @@ import "./index.less"
 
 const TableContext = createContext(null)
 
-type pageType = {
-    current: number
-    pageSize: number
-    total: number
-}
-
+/**
+ * @param actionRef 组件实例
+ * @param searchConfig 搜索项配置，若为空则不会展示搜索栏
+ * @param method 接口请求方式，默认GET
+ * @param url 请求url
+ * @param defaultData 默认传给后台的额外值，发生改变时会自行刷新
+ * @param rowKey 表格默认key值，会影响多选时的取值，默认"id"
+ * @param columns 表格列配置，参照antd
+ * @param scroll 长宽滚动
+ * @param topRender 表格上方区域自定义渲染
+ * @param leftButtonList 表格左上方按钮列表
+ * @param rowSelect 表格可多选
+ * @param rowDisabled 表格行禁用
+ * @param expand 表格可展开
+ * @param tableProps Table组件扩展props
+ * @returns 
+ */
 function ModernTable({ 
     actionRef,
 
@@ -118,6 +130,8 @@ function ModernTable({
     }))
 
     function search(page: { current: number, pageSize: number }, param: object, clear: boolean){
+        console.log("page", page)
+        console.log("param", param)
         setLoading(true)
         lib.request({
             url,
@@ -201,6 +215,13 @@ function ModernTable({
         </TableContext.Provider>
     </div>
 }
+
+type pageType = {
+    current: number
+    pageSize: number
+    total: number
+}
+
 export type ModernTableProps = {
     type?: "page" | "component"
     actionRef: any

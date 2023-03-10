@@ -1,3 +1,5 @@
+/** 表格分页查询组件 - 表格部分 */
+
 import React, { useState, useContext, ReactNode } from 'react';
 import { SettingOutlined } from '@ant-design/icons'
 import useDeepEffect from '@/hooks/useDeepEffect';
@@ -202,7 +204,7 @@ function TableContent({
 export type TableContentProps = {
     rowKey?: string,
     columns: any[],
-    scroll?: {x?: number, y?: number},
+    scroll?: {x?: number | string, y?: number | string},
     leftButtonList?: leftButtonListProps[],
     rowSelect?: rowSelectProps | boolean,
     rowDisabled?: (record: any) => boolean,

@@ -21,7 +21,7 @@ export type ModernTableProps = {
     defaultData?: object
     rowKey?: string
     columns: object[]
-    scroll?: { x?: number, y?: number }
+    scroll?: { x?: number | string, y?: number | string }
     topRender?: ReactNode
     leftButtonList?: leftButtonListProps[]
     rowSelect?: rowSelectProps | boolean
@@ -32,11 +32,12 @@ export type ModernTableProps = {
 }
 
 export type searchConfigProps = {
-    type: "Input" | "Select" | "DatePicker"
+    type: "Input" | "Select" | "SearchSelect" | "DatePicker" | "RangePicker"
     label: string
-    name: string
+    name: string | [string, string]
     span?: number
     url?: string
+    valueKey?: string
     selectList?: { value: any, desc: string }[]
 }
 

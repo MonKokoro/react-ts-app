@@ -23,18 +23,26 @@ function ModernTableTest() {
             label: "性别",
             name: "sex",
             selectList: [
+                { value: 0, desc: "男生" },
                 { value: 1, desc: "女生" }
             ]
         },
         {
-            type: "Input",
-            label: "成员名称",
-            name: "name",
+            type: "DatePicker",
+            label: "加入日期",
+            name: "joinDate",
         },
         {
-            type: "Input",
-            label: "成员名称",
-            name: "name",
+            type: "RangePicker",
+            label: "生日",
+            name: ["birthBegin", "birthEnd"]
+        },
+        {
+            type: "SearchSelect",
+            label: "成员所属",
+            name: "place",
+            url: "/mock/getPlaceList",
+            valueKey: "placeValue"
         }
     ]
 

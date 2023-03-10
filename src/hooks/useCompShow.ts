@@ -3,9 +3,9 @@
 import { useState } from 'react'
 
 export default function useCompShow() {
-    const [ modal, setModal ] = useState({ show: false, param: null })
+    const [ modal, setModal ] = useState<{show: boolean, param: any}>({ show: false, param: null })
 
-    function open(param){
+    function open(param: any){
         setModal({ show: true, param })
     }
 
