@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Checkbox, message, Space, Switch } from 'antd';
+import { Checkbox, message, Space, Alert } from 'antd';
 import ModernTable, { searchConfigProps } from '@/component/modern-table';
 import type { ModernTableRef } from '@/component/modern-table';
 import './index.less'
@@ -73,7 +73,8 @@ function ModernTableTest() {
             searchConfig={searchConfig}
             url={'/mock/getBondMemberList'} 
             columns={columns}
-            topRender={
+            topRender={<>
+                <Alert className='alert-message' type='info' message="数据来源于Mock" />
                 <Space>
                     <Checkbox checked={rowDisabled} onChange={(e) => setRowDisabled(e.target.checked)}>启用行禁用</Checkbox>
                     <Checkbox checked={selectable} onChange={(e) => setSelectable(e.target.checked)}>启用列表多选</Checkbox>
@@ -86,7 +87,7 @@ function ModernTableTest() {
                         setExpandSelectable(e.target.checked)
                     }}>启用子表多选</Checkbox>}
                 </Space>
-            }
+            </>}
             leftButtonList={[
                 { text: "获取已选中数据", onClick: () => {
                     console.log("selectedKeys", actionRef.current.getSelectedKeys())

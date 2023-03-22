@@ -5,14 +5,14 @@ import { Pagination } from 'antd';
 import useDeepEffect from "@/hooks/useDeepEffect"
 import AdvancedSearchForm from "./advanced-search-form";
 import TableContent from "./table-content"
-import type { ModernTableRef, searchConfigProps, leftButtonListProps, rowSelectProps, expandProps } from './type'
+import type { ModernTableProps, ModernTableRef, searchConfigProps, leftButtonListProps, rowSelectProps, expandProps } from './type'
 
 import useSelectedKeysMap from './hooks/useSelectedKeysMap';
 import useExpandSelectedKeysMap from './hooks/useExpandSelectedKeysMap';
 
 // import { Context, ContextProvider, ContextConsumer } from './context';
-
-import lib from '@/lib';
+import axios from '@/axios'
+// import lib from '@/lib';
 import "./index.less"
 
 const TableContext = createContext(null)
@@ -133,7 +133,7 @@ function ModernTable({
         console.log("page", page)
         console.log("param", param)
         setLoading(true)
-        lib.request({
+        axios.request({
             url,
             method,
             data: {
@@ -141,18 +141,17 @@ function ModernTable({
                 pageNum: page.current || 1,
                 pageSize: page.pageSize || 5,
                 ...defaultData
-            },
-            success: (data: any) => {
-                setTimeout(() => setLoading(false), 300)
-                setPage(data.page)
-                setParam(param)
-                setDataList(data.list)
-                if(clear){
-                    clearKeys()
-                    clearExpandKeys()
-                }
-            },
-            fail: () => setTimeout(() => setLoading(false), 300)
+            }
+        }).then( ({data}) => {
+            const { page, list } = data
+            setTimeout(() => setLoading(false), 300)
+            setPage(page)
+            setParam(param)
+            setDataList(list)
+            if(clear){
+                clearKeys()
+                clearExpandKeys()
+            }
         })
     }
 
@@ -222,26 +221,7 @@ type pageType = {
     total: number
 }
 
-export type ModernTableProps = {
-    type?: "page" | "component"
-    actionRef: any
-    searchConfig?: searchConfigProps[]
-    method?: "GET" | "POST"
-    url: string
-    defaultData?: object
-    rowKey?: string
-    columns: object[]
-    scroll?: { x?: number, y?: number }
-    topRender?: ReactNode
-    leftButtonList?: leftButtonListProps[]
-    rowSelect?: rowSelectProps | boolean
-    rowDisabled?: (record: any) => boolean
-    expand?: expandProps | false
-    paginationFixed?: boolean
-    tableProps?: object
-}
-
-export type { ModernTableRef, searchConfigProps, leftButtonListProps, rowSelectProps, expandProps }
+export type { ModernTableProps, ModernTableRef, searchConfigProps, leftButtonListProps, rowSelectProps, expandProps }
 
 export { TableContext }
 export default ModernTable

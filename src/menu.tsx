@@ -31,13 +31,11 @@ function SysMenu() {
     useEffect(() => {
         setMenuList([
             {
-                iconUrl: "",
                 label: <Link to="/home">首页</Link>,
                 key: "/home",
                 icon: <HomeOutlined />
             },
             {
-                iconUrl: "",
                 label: "组件案例&API",
                 key: "",
                 icon: <BarsOutlined />,

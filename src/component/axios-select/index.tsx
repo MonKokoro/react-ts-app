@@ -92,6 +92,28 @@ function AxiosSelect({
     </Select>
 }
 
+// interface AxiosSelectBaseProps {
+//     value?: any,
+//     onChange?: Function,
+//     props?: any,
+//     disabled?: boolean,
+// }
+
+// interface AxiosSelectUrlProps extends AxiosSelectBaseProps {
+//     url: string,
+//     method?: "GET" | "POST",
+//     defaultData?: any,
+//     usedKey?: [ string, string ],
+// }
+
+// interface AxiosSelectListProps extends AxiosSelectBaseProps {
+//     selectList: { value: number | string, desc: number | string }[],
+// }
+
+// interface AxiosSelectCodeProps extends AxiosSelectBaseProps {
+//     queryCode: string,
+// }
+
 type AxiosSelectProps = {
     url?: string,
     usedKey?: [ string, string ],

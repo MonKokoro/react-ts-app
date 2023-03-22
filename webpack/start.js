@@ -11,6 +11,9 @@ module.exports = smp.wrap(merge(common, {
     devtool: 'eval-cheap-module-source-map',
     plugins: [
         new webpack.DefinePlugin({
+            // 'process.env': {
+            //     BUILD_ENV: JSON.stringify('dev')
+            // }
             "BUILD_ENV": JSON.stringify('dev')
         })
     ],

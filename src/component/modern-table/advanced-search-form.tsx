@@ -50,9 +50,7 @@ function AdvancedSearchForm({
                             return dayjs(value)
                         }
                         transform[item.name] = (value: any) => {
-                            return {
-                                [item.name]: value.format("YYYY-MM-DD")
-                            }
+                            return { [item.name]: value.format("YYYY-MM-DD") }
                         }
                         break
                     case "RangePicker":
@@ -101,7 +99,6 @@ function AdvancedSearchForm({
             case "SearchSelect":
                 return <SearchSelect 
                     url={item.url}
-                    // mode={item.mode || null}
                     usedKey={item.usedKey}
                     valueKey={item.valueKey}
                     method={item.method}
