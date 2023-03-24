@@ -67,7 +67,7 @@ function ModernTable({
     const [ loading, setLoading ] = useState<boolean>(false)
 
     const { selectedKeysMap, selectedCount, addKeys, deleteKeys, clearKeys } = useSelectedKeysMap(rowKey)
-    const { expandSelectedKeysMap, expandSelectedRowsMap, expandSelectedCount, setExpandKeys, clearExpandKeys } = useExpandSelectedKeysMap(expand ? expand.rowKey : "id")
+    const { expandSelectedKeysMap, expandSelectedRowsMap, expandSelectedCount, setExpandKeys, clearExpandKeys } = useExpandSelectedKeysMap(expand ? expand.rowKey ? expand.rowKey : "id" : "id")
 
     const [ clearSearch, setClearSearch ] = useState(0)
 
@@ -130,15 +130,13 @@ function ModernTable({
     }))
 
     function search(page: { current: number, pageSize: number }, param: object, clear: boolean){
-        console.log("page", page)
-        console.log("param", param)
         setLoading(true)
         axios.request({
             url,
             method,
             data: {
                 ...param,
-                pageNum: page.current || 1,
+                current: page.current || 1,
                 pageSize: page.pageSize || 5,
                 ...defaultData
             }
@@ -167,8 +165,9 @@ function ModernTable({
                 loading,
 
                 search,
-
+                
                 selectedCount,
+                selectedKeysMap,
                 addKeys,
                 deleteKeys,
                 clearKeys,

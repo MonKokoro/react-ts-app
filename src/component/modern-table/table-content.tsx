@@ -27,6 +27,7 @@ function TableContent({
         loading,
         dataList,
         selectedCount,
+        selectedKeysMap,
         addKeys,
         deleteKeys,
         clearKeys,
@@ -134,9 +135,10 @@ function TableContent({
         // 列表数据发生变化时，一般代表翻页，此时需要比对一遍已选中的映射表
         if(rowSelect){
             const keys = dataList.reduce((prev: any[], curr: any) => {
-                if(selectedRowKeys[curr[rowKey]]){
+                if(selectedKeysMap && selectedKeysMap[curr[rowKey]]){
                     prev.push(curr[rowKey])
                 }
+                return prev
             }, [])
             setSelectedRowKeys(keys)
         }

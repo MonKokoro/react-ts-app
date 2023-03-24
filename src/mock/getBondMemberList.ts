@@ -32,13 +32,26 @@ export default Mock.mock(/\/mock\/getBondMemberList*?/, 'get', ({ body }) => {
                 }
             ]
             return this.pick(members)
-        },
-        
+        }
     })
     for(let i = 0; i < request.pageSize; i++){
         list.push({
-            id: i,
-            ...Random.member()
+            id: i + (request.current - 1) * 5,
+            ...Random.member(),
+            performanceExperience: [
+                {
+                    "id": 1,
+                    "date": "2023-2-27",
+                    "place": "演出厅",
+                    "name": "xx公演"
+                },
+                {
+                    "id": 2,
+                    "date": "2023-3-27",
+                    "place": "超大演出厅",
+                    "name": "yy公演"
+                }
+            ]
         })
     }
     return { 
@@ -47,9 +60,9 @@ export default Mock.mock(/\/mock\/getBondMemberList*?/, 'get', ({ body }) => {
             page: {
                 current: request.current,
                 pageSize: request.pageSize,
-                total: 4
+                total: 25
             },
-            list: require('./json/bondMemberList.json')
+            list: list
         }, 
         success: true,
         msg: "操作成功" 

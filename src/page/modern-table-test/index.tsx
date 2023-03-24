@@ -74,7 +74,7 @@ function ModernTableTest() {
             url={'/mock/getBondMemberList'} 
             columns={columns}
             topRender={<>
-                <Alert className='alert-message' type='info' message="数据来源于Mock" />
+                <Alert className='alert-message' type='info' message="数据由Mock随机生成" />
                 <Space>
                     <Checkbox checked={rowDisabled} onChange={(e) => setRowDisabled(e.target.checked)}>启用行禁用</Checkbox>
                     <Checkbox checked={selectable} onChange={(e) => setSelectable(e.target.checked)}>启用列表多选</Checkbox>

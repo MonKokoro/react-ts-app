@@ -7,6 +7,7 @@ export default function useSelectedKeysMap(key: string) {
     const selectedKeysMap = useRef<any>({})
     // 需要展示已选中的数量，因此并非无关渲染
     const [ selectedCount, setSelectedCount ] = useState<number>(0)
+    const [ selectedKeys, setSelectedKeys ] = useState<any[]>([])
     
     // 由于table返回的是发生变化的list，因此直接做成批量操作比较好
     function addKeys( list: any[] = [] ){

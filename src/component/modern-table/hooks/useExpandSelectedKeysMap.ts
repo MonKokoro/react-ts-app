@@ -14,7 +14,7 @@ export default function useExpandSelectedKeysMap(expandKey?: string) {
         keys: any[] = [],
         list: any[] = []
     ){
-        const mainKeyCount = expandSelectedRowsMap.current[mainKey] ?.length || 0
+        const mainKeyCount = Object.keys(expandSelectedRowsMap.current[mainKey] || {}).length || 0
         const newMap = list.reduce((prev, curr) => {
             prev[curr[expandKey]] = curr
             return prev
