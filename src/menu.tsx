@@ -36,7 +36,7 @@ function SysMenu() {
                 icon: <HomeOutlined />
             },
             {
-                label: "组件案例&API",
+                label: "组件案例",
                 key: "",
                 icon: <BarsOutlined />,
                 children: [
