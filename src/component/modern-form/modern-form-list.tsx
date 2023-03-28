@@ -171,7 +171,7 @@ function ModernFormList({
             </Form.List>
 
         </div>
-    </div> : ''
+    </div> : <></>
 }
  
 export default ModernFormList

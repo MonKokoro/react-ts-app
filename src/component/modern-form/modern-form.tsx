@@ -10,6 +10,7 @@ const FormContext = createContext(null);
 
 function ModernForm({
     childRef,
+    className = '',
     layout,
     children,
     importData
@@ -139,7 +140,7 @@ function ModernForm({
         return val
     }
 
-    return <div className="novel-form">
+    return <div className={`novel-form ${className}`}>
         <FormContext.Provider 
             value={{
                 convertMap: convertMap.current,

@@ -4,7 +4,10 @@ import ModernForm from './modern-form'
 import ModernFormItems from './modern-form-items'
 import ModernFormList from './modern-form-list'
 
+import type { ModernFormRef, FormItemType } from './type'
+
 import './index.less'
 
 export { ModernFormItems, ModernFormList }
+export type { ModernFormRef, FormItemType }
 export default ModernForm

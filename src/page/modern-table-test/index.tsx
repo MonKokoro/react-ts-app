@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Checkbox, message, Space, Alert } from 'antd';
-import ModernTable, { searchConfigProps } from '@/component/modern-table';
-import type { ModernTableRef } from '@/component/modern-table';
+import ModernTable from '@/component/modern-table';
+import type { searchConfigProps, ModernTableRef } from '@/component/modern-table';
 import './index.less'
 
 function ModernTableTest() {

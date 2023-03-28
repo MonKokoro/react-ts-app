@@ -43,6 +43,10 @@ function SysMenu() {
                     {
                         label: <Link to="/modern-table-test">ModernTable</Link>,
                         key: "/modern-table-test"
+                    },
+                    {
+                        label: <Link to="/modern-form-test">ModernForm</Link>,
+                        key: "/modern-form-test"
                     }
                 ]
             },

@@ -19,12 +19,14 @@ import Layout from "./layout";
 
 import Home from "./page/home"
 import ModernTableTest from "./page/modern-table-test";
+import ModernFormTest from "./page/modern-form-test";
 import Canvas from "./page/canvas"
 
 const routerMap: any = {
     "home": [<Home/>, "首页"],
     "canvas-practise": [<Canvas />, "canvas"],
-    "modern-table-test": [<ModernTableTest />, "ModernTable测试"]
+    "modern-table-test": [<ModernTableTest />, "ModernTable测试"],
+    "modern-form-test": [<ModernFormTest />, "ModernForm测试"],
 }
 
 let routeList: any[] = []

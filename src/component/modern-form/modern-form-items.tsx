@@ -3,8 +3,10 @@
 import React, { useState, useContext } from "react";
 import useDeepEffect from "@/hooks/useDeepEffect"
 
-import { FormContext } from "./novel-form";
-import NovelFormRender from "./novel-form-render";
+import { FormContext } from "./modern-form";
+import ModernFormRender from "./modern-form-render";
+
+import type { ModernFormItemsProps, FormItemType } from "./type";
  
 function ModernFormItems({
     title, 
@@ -13,7 +15,7 @@ function ModernFormItems({
     config,
     rightRender,
     contentRender
-}){
+}: ModernFormItemsProps){
     const [ usedConfig, setUsedConfig ] = useState([])
     const { setConvertFunc, setTransformFunc } = useContext(FormContext)
 
@@ -22,20 +24,30 @@ function ModernFormItems({
         setUsedConfig(newConfig)
     }, [ config ])
 
+    function nameConvise(name: string | [string, string]){
+        if(typeof(name) === 'string'){
+            return name
+        }
+        else{
+            return name.join('_')
+        }
+    }
+
     /** config格式化 */
-    function configRevise(conf){
-        let configByRow = [], row = []
+    function configRevise(conf: FormItemType[]){
+        let configByRow: any = []
+        let row: any = []
         let convertMap = {}, transportMap = {}
         conf.map((item, index) => {
             // 如果该项需要被转换，写入格式转换映射中
             // 因为是一个一个写入的，或许会有性能的问题？
             if(!item.hidden){
                 if(item.convert){
-                    convertMap[item.name] = item.convert
+                    convertMap[nameConvise(item.name)] = item.convert
                 }
     
                 if(item.transform){
-                    transportMap[item.name] = item.transform
+                    transportMap[nameConvise(item.name)] = item.transform
                 }
             }
             
@@ -67,7 +79,7 @@ function ModernFormItems({
             </div>
         </div>
         <div className="card-context">
-            {contentRender ? contentRender : <NovelFormRender config={usedConfig} columns={columns} />}
+            {contentRender ? contentRender : <ModernFormRender config={usedConfig} columns={columns} />}
         </div>
     </div>
 }
