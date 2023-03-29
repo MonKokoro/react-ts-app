@@ -8,7 +8,7 @@ import useDeepEffect from "@/hooks/useDeepEffect"
 import { FormContext } from "./modern-form";
 import ModernFormRender from "./modern-form-render";
 
-import type { ModernFormListProps, ModernFormConfig } from "./type";
+import type { ModernFormListProps, FormItemType } from "./type";
 import type { ValidatorRule } from "rc-field-form/lib/interface";
 
 const { Panel } = Collapse;
@@ -59,7 +59,7 @@ function ModernFormList({
         }
     }
 
-    function setMap(conf: ModernFormConfig[]){
+    function setMap(conf: FormItemType[]){
         let convertMap = {}, transportMap = {}
         conf.map(item => {
             if(item.convert){
@@ -75,7 +75,7 @@ function ModernFormList({
     }
 
      /** config格式化 */
-     function configRevise(conf: ModernFormConfig[]){
+     function configRevise(conf: FormItemType[]){
         let configByRow: any = []
         let row: any = []
         conf.map((item, index) => {
@@ -104,13 +104,13 @@ function ModernFormList({
     }
     if(rules)
         listRules = listRules.concat(rules)
-    return !hidden ? <div className="novel-form-items">
+    return !hidden ? <div className="modern-form-items">
         <div className="card-top">
             <div className="title">
-                <span className="title-text">{title}</span>
-                {tip && <span className="title-tip">
+                <div className="title-text">{title}</div>
+                {tip && <div className="title-tip">
                     {tip}
-                </span>}
+                </div>}
             </div>
             <div className="title-right">
                 {rightRender && rightRender}

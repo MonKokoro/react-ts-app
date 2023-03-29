@@ -19,11 +19,57 @@ function ModernFormItems({
     const [ usedConfig, setUsedConfig ] = useState([])
     const { setConvertFunc, setTransformFunc } = useContext(FormContext)
 
+    // const convertPreset = (name: string | [string, string]) => {
+    //     "SearchSelect": (record: any, paran: any) => {
+    //         return record
+    //     }
+    // }
+
     useDeepEffect(() => {
         const newConfig = configRevise(config)
         setUsedConfig(newConfig)
     }, [ config ])
 
+    /** 赋值转换预设 */
+    function convertPreset(item: FormItemType){
+        switch(item.type){
+            case "SearchSelect": {
+                return (_: any, param: any) => {
+                    return {
+                        id: param[item.name[0]],
+                        name: param[item.name[1]],
+                        record: "PLACEHOLDER"
+                    }
+                }
+            }
+            default: {
+                return
+            }
+        }
+    }
+
+    /** 提交转换预设 */
+    function transformPreset(item: FormItemType){
+        switch(item.type){
+            case "SearchSelect": {
+                return (value: any) => {
+                    console.log(item)
+                    if(value && value.id)
+                        return {
+                            [item.name[0]]: value.id,
+                            [item.name[1]]: value.name
+                        }
+                    else
+                        return undefined
+                }
+            }
+            default: {
+                return
+            }
+        }
+    }
+
+    /** name字段转换 */
     function nameConvise(name: string | [string, string]){
         if(typeof(name) === 'string'){
             return name
@@ -42,13 +88,19 @@ function ModernFormItems({
             // 如果该项需要被转换，写入格式转换映射中
             // 因为是一个一个写入的，或许会有性能的问题？
             if(!item.hidden){
+                if(!item.convert && convertPreset(item)){
+                    convertMap[nameConvise(item.name)] = convertPreset(item)
+                }
                 if(item.convert){
                     convertMap[nameConvise(item.name)] = item.convert
                 }
-    
+                if(!item.transform && transformPreset(item)){
+                    transportMap[nameConvise(item.name)] = transformPreset(item)
+                }
                 if(item.transform){
                     transportMap[nameConvise(item.name)] = item.transform
                 }
+                item.name = nameConvise(item.name)
             }
             
             // 变更为以行为单位
@@ -66,16 +118,16 @@ function ModernFormItems({
         return configByRow
     }
 
-    return <div className="novel-form-items">
+    return <div className="modern-form-items">
         <div className="card-top">
             <div className="title">
-                <span className="title-text">{title}</span>
-                {tip && <span className="title-tip">
+                <div className="title-text">{title}</div>
+                {tip && <div className="title-tip">
                     {tip}
-                </span>}
-            </div>
-            <div className="title-right">
-                {rightRender && rightRender}
+                </div>}
+                <div className="title-right">
+                    {rightRender && rightRender}
+                </div>
             </div>
         </div>
         <div className="card-context">

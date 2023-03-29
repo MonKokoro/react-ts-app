@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Checkbox, message, Space, Alert, Button } from 'antd';
+import React, { useState, useRef, Suspense } from 'react';
+import { Checkbox, message, Space, Alert, Button, Tag } from 'antd';
 import ModernForm, { ModernFormItems, ModernFormList } from '@/component/modern-form';
 import type { ModernFormRef, FormItemType } from '@/component/modern-form';
 import './index.less'
@@ -68,6 +68,11 @@ function ModernFormTest() {
                 type: "Input",
                 label: "演出名称",
                 name: "performanceName"
+            },
+            {
+                type: "DatePicker",
+                label: "演出时间",
+                name: "performanceDate"
             }
         ]
     }
@@ -75,7 +80,15 @@ function ModernFormTest() {
     return <div className="modern-form-test">
         <div className="modern-content">
             <ModernForm className='content-form' childRef={childRef} layout={layout}>
-                <ModernFormItems title='基本信息' config={baseConfig} columns={3}/>
+                <ModernFormItems 
+                    title='基本信息' 
+                    config={baseConfig} 
+                    columns={3}
+                    tip="基本信息~"
+                    rightRender={
+                        <Tag>右侧渲染</Tag>
+                    }
+                />
                 <ModernFormList
                     title='演出信息' 
                     config={(field: any, _index: number) => {

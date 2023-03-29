@@ -2,7 +2,7 @@
 
 import React, { useState, useContext } from "react";
 import useDeepEffect from "@/hooks/useDeepEffect"
-import { Form, Row, Col, Input, InputNumber, Switch } from "antd";
+import { Form, Row, Col, Input, InputNumber, Switch, DatePicker } from "antd";
 import AxiosSelect from "../axios-select";
 // import FileUploader from "../file-uploader";
 import NumberRange from "../number-range"
@@ -129,6 +129,8 @@ function ModernFormRender({
                     props={item.props}
                     onClick={item.onChange}
                 />
+            case "DatePicker":
+                return <DatePicker style={{width: "100%"}} {...item.props} />
             case "Switch":
                 return <Switch
                     disabled={item.disabled}
@@ -152,7 +154,7 @@ function ModernFormRender({
     }
 
     return <div className="novel-form-context">
-        {usedConfig && usedConfig.map((rowItem, rowIndex) => {
+        {usedConfig.map((rowItem: FormItemType[], rowIndex: number) => {
             return <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} key={rowIndex}>
                 {rowItem.map((item: FormItemType, index: number) => {
                     // 出于必填判定比其它rules判定使用更频繁的考虑，单独将其抽到rules配置中

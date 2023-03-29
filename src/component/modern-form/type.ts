@@ -54,7 +54,7 @@ export type ModernFormListProps = {
     /** 单个列表项是否可收起，默认不可收起。这里收起功能使用的是Collapse组件，为true时必须设置childrenTitle属性 */
     collapse?: boolean,
     /** 表单列表的tip描述 */
-    tip?: string,
+    tip?: string | ReactNode,
     /** 一行占据几个表单项，默认为2 */
     columns?: number, 
     /** 表单项配置 */
@@ -233,6 +233,13 @@ export interface FormSearchSelect extends ModernFormConfigBase {
     onChange?: (value: any, record: any) => void
 }
 
+export interface FormDatePicker extends ModernFormConfigBase {
+    /** 日期选择框 */
+    type: "DatePicker",
+    /** 表单项字段值 */
+    name: string
+}
+
 /** ModernFormConfig - 开关配置项 */
 export interface FormSwitch extends ModernFormConfigBase {
     /** 开关组件 */
@@ -253,7 +260,7 @@ export interface FormCustom extends ModernFormConfigBase {
     render: () => ReactNode
 }
 
-export type FormItemType = FormInput | FormInputNumber | FormSpan | FormInputNumber | FormNumberRange | FormTextArea | FormSelectList | FormSelectAxios | FormSelectCode | FormSearchSelect | FormSwitch | FormCustom
+export type FormItemType = FormInput | FormInputNumber | FormSpan | FormInputNumber | FormNumberRange | FormTextArea | FormSelectList | FormSelectAxios | FormSelectCode | FormSearchSelect | FormDatePicker | FormSwitch | FormCustom
 
 export interface ModernFormConfig {
     /** 表单项类型 */
@@ -286,7 +293,7 @@ export type ModernFormRenderProps = {
     /** 一行占据几个表单项，默认为2 */
     columns?: number
     /** 由ModernForm内部识别的表单项配置 */
-    config: (FormInput | FormTextArea)[]
+    config: FormItemType[]
     /** 需要表单列表识别的field值 */
     field?: any
     /** 需要表单列表识别的列表key值 */

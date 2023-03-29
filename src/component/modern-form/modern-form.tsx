@@ -53,7 +53,10 @@ function ModernForm({
             
     }, [importData])
 
-    function setConvertFunc(map: {[key: string]: Function}, listName?: string){
+    function setConvertFunc(
+        map: {[key: string]: (value: any, param: any) => any}, 
+        listName?: string
+    ){
         // 有listName代表是表单list，需要嵌套一层
         if(listName)
             convertMap.current = { ...convertMap.current, [listName]: map }
@@ -61,7 +64,10 @@ function ModernForm({
             convertMap.current = { ...convertMap.current, ...map }
     }
 
-    function setTransformFunc(map: {[key: string]: Function}, listName?: string){
+    function setTransformFunc(
+        map: {[key: string]: (value: any, param: any) => {[key: string]: any}}, 
+        listName?: string
+    ){
         // 有listName代表是表单list，需要嵌套一层
         if(listName)
             transformMap.current = { ...transformMap.current, [listName]: map }

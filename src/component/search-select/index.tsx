@@ -87,6 +87,7 @@ function SearchSelect({
             onChange({
                 id: newValue,
                 name: (option as any).children,
+                record: newValue ? selectListRowsGet(newValue) : null
             }) 
             onClick(newValue, option, newValue ? selectListRowsGet(newValue) : null)
         }}
