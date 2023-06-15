@@ -43,7 +43,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         const res = response.data
-        /** 这里需要根据业务需求修改惹~ */
+        /** 这里就请根据业务需求修改惹~ */
         switch(res.code){
             case 401:{
                 message.error("登录失效，请重新登录")

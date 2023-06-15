@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Checkbox, message, Space, Alert } from 'antd';
+import { Checkbox, message, Space, Alert, Tag } from 'antd';
 import ModernTable from '@/component/modern-table';
 import type { searchConfigProps, ModernTableRef } from '@/component/modern-table';
 import './index.less'
@@ -47,9 +47,22 @@ function ModernTableTest() {
     ]
 
     const columns = [
-        {title: "乐队成员", dataIndex: "name", width: 200},
-        {title: "年龄", dataIndex: "age", width: 200},
-        {title: "声优", dataIndex: "cv", width: 200},
+        {title: "乐队成员", dataIndex: "name"},
+        {title: "年龄", dataIndex: "age"},
+        {title: "声优", dataIndex: "cv"},
+        {
+            title: "职责", 
+            dataIndex: "responsibility", 
+            render: (value: string) => {
+                const tagMap = {
+                    guitarist: <Tag color="gold">吉他手</Tag>,
+                    drummer: <Tag color="volcano">鼓手</Tag>,
+                    leadSinger: <Tag color="geekblue">主唱</Tag>,
+                    bassist: <Tag color="cyan">贝斯手</Tag>
+                }
+                return tagMap[value]
+            }
+        },
         {
             title: "操作",
             dataIndex: "operation",

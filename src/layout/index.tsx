@@ -10,13 +10,15 @@ import Menu from '@/menu'
 import { routeList } from "@/router";
 import store from "@/store";
 
+import Background from "./background";
+
 function Layout () {
     const location = useLocation();
     const navigate = useNavigate();
     const currentOutlet = useOutlet()
     const [ userName, setUserName ] = useState<string>()
     const [ maskCount, setMaskCount ] = useState<number>(0)
-    // const [ theme, setTheme ] = useState<string>(window.localStorage.getItem("theme") || "#13547a")
+    const [ theme, setTheme ] = useState<string>(window.localStorage.getItem("theme") || "#13547A")
 
     useEffect(() => {
         if(window.localStorage.getItem("userName")){
@@ -33,49 +35,52 @@ function Layout () {
 
     const { nodeRef } = routeList.find((route) => route.path === location.pathname) || {}
 
+    const colorList = ["#13547A", "#1677FF", "#CE9C9D", "#ABD5BE", "#E0B394"]
+
     return <ConfigProvider
         locale={zhCN}
         theme={{
-            token: { colorPrimary: "#13547a" },
+            token: { colorPrimary: theme },
         }}
     >
         <div className='layout'>
             <Menu />
             <div className='content-box'>
                 <div className='header'>
-                {/* <div className='header' style={{background: `linear-gradient(to right, ${theme}, #80D0A7)`}}> */}
                     <div className="left">
                         <Input />
                     </div>
                     <div className="right">
-                        {/** 已确认皮肤更换功能不适合本系统样式，将其废弃 */}
-                        {/* <div className="skin">
+                        <div className="skin">
                             <SkinFilled className="skin-icon" color="white" />
                             <div className="skin-modal">
                                 <div className="title">选择主题</div>
                                 <div className="content">
-                                    <div className="color-box" style={{background: "#13547a"}} onClick={() => {
-                                        setTheme("#13547a")
-                                        window.localStorage.setItem("theme", "#13547a")
-                                    }}/>
-                                    <div className="color-box" style={{background: "#1677ff"}} onClick={() => {
-                                        setTheme("#1677ff")
-                                        window.localStorage.setItem("theme", "#1677ff")
-                                    }}/>
-                                    <div className="color-box" />
-                                    <div className="color-box" />
-                                    <div className="color-box" />
-                                    <div className="color-box" />
-                                    <div className="color-box" />
+                                    {colorList.map(color => {
+                                        return <div 
+                                            key={color}
+                                            className={`color-box ${theme === color ? "color-focus" : ""}`}
+                                            style={{background: color}} 
+                                            onClick={() => {
+                                                setTheme(color)
+                                                window.localStorage.setItem("theme", color)
+                                            }}
+                                        />
+                                    })}
+                                </div>
+                                <div className="title">选择布局样式</div>
+                                <div className="content">
+                                    
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
                         <div className="user">
                             <Avatar className="user-avatar" src={<img src={require("@/assets/image/anya.png")} />} />
                             <span className="user-name">{userName}</span>
                             <DownOutlined className="user-arrow"/>
                         </div>
                     </div>
+                    <Background color={theme}/>
                 </div>
                 <div className="content">
                     <CSSTransition
