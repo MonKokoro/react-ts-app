@@ -6,12 +6,12 @@ export const collapsedSlice = createSlice({
     name: 'collapsed',
     initialState: false,
     reducers: {
-        setCollapsed: (state: boolean) => {
-            return state
+        collapsedSet: (state: boolean, action) => {
+            return state = action.payload
         }
     },
 })
 
-export const { setCollapsed } = collapsedSlice.actions
+export const { collapsedSet } = collapsedSlice.actions
 
 export default collapsedSlice.reducer;

@@ -44,70 +44,77 @@ function Layout () {
         }}
     >
         <div className='layout'>
-            <Menu />
-            <div className='content-box'>
-                <div className='header'>
-                    <div className="left">
-                        <Input />
-                    </div>
-                    <div className="right">
-                        <div className="skin">
-                            <SkinFilled className="skin-icon" color="white" />
-                            <div className="skin-modal">
-                                <div className="title">选择主题</div>
-                                <div className="content">
-                                    {colorList.map(color => {
-                                        return <div 
-                                            key={color}
-                                            className={`color-box ${theme === color ? "color-focus" : ""}`}
-                                            style={{background: color}} 
-                                            onClick={() => {
-                                                setTheme(color)
-                                                window.localStorage.setItem("theme", color)
-                                            }}
-                                        />
-                                    })}
-                                </div>
-                                <div className="title">选择布局样式</div>
-                                <div className="content">
+            {/** 最顶部header */}
+            <div className='header'>
+                <div className="left">
+                    <div className="logo">MonShin花园</div>
+                </div>
+                <div className="right">
+                    <div className="skin">
+                        <SkinFilled className="skin-icon" color="white" />
+                        <div className="skin-modal">
+                            <div className="title">选择主题</div>
+                            <div className="content">
+                                {colorList.map(color => {
+                                    return <div 
+                                        key={color}
+                                        className={`color-box ${theme === color ? "color-focus" : ""}`}
+                                        style={{background: color}} 
+                                        onClick={() => {
+                                            setTheme(color)
+                                            window.localStorage.setItem("theme", color)
+                                        }}
+                                    />
+                                })}
+                            </div>
+                            <div className="title">选择布局样式</div>
+                            <div className="content">
                                     
-                                </div>
                             </div>
                         </div>
-                        <div className="user">
-                            <Avatar className="user-avatar" src={<img src={require("@/assets/image/anya.png")} />} />
-                            <span className="user-name">{userName}</span>
-                            <DownOutlined className="user-arrow"/>
-                        </div>
                     </div>
-                    <Background color={theme}/>
+                    <div className="user">
+                        <Avatar className="user-avatar" src={<img src={require("@/assets/image/anya.png")} />} />
+                        <span className="user-name">{userName}</span>
+                        <DownOutlined className="user-arrow"/>
+                    </div>
                 </div>
+                <Background color={theme}/>
+            </div>
+            {/** 菜单+内容区域 */}
+            <div className='content-box'>
+                <Menu />
                 <div className="content">
-                    <CSSTransition
-                        in={maskCount ? true : false}
-                        timeout={200}
-                        classNames="mask-fade"
-                        unmountOnExit
-                    >
-                        <div className="mask">
-                            <Spin tip="加载中，请稍后..."/>
-                        </div>
-                    </CSSTransition>
-                    <SwitchTransition>
+                    <div className="breadcrumb">
+
+                    </div>
+                    <div className="container">
                         <CSSTransition
-                            key={location.pathname}
-                            nodeRef={nodeRef}
-                            timeout={300}
-                            classNames="fade"
+                            in={maskCount ? true : false}
+                            timeout={200}
+                            classNames="mask-fade"
                             unmountOnExit
                         >
-                            {() => (
-                                <div ref={nodeRef} className="content-side">
-                                    {currentOutlet}
-                                </div>
-                            )}
+                            <div className="mask">
+                                <Spin tip="加载中，请稍后..."/>
+                            </div>
                         </CSSTransition>
-                    </SwitchTransition>
+                        <SwitchTransition>
+                            <CSSTransition
+                                key={location.pathname}
+                                nodeRef={nodeRef}
+                                timeout={300}
+                                classNames="fade"
+                                unmountOnExit
+                            >
+                                {() => (
+                                    <div ref={nodeRef} className="content-side">
+                                        {currentOutlet}
+                                    </div>
+                                )}
+                            </CSSTransition>
+                        </SwitchTransition>
+                    </div>
                 </div>
             </div>
         </div>

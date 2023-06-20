@@ -139,6 +139,21 @@ var lib = {
             }
         })
     },
+
+    /** 节流函数 */
+    throttle (func: Function, wait: number) {
+        let timeOut: any = null;
+        return function () {
+            let context = this;
+            let args = arguments;
+            if (!timeOut) {
+                timeOut = setTimeout(function () {
+                    func.apply(context, args);
+                    timeOut = null;
+                }, wait);
+            }
+        }
+    },
 }
 
 export default lib;
