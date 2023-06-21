@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import dayjs from 'dayjs'
+import ChartCard from "./chart-card"
+import lib from "@/lib"
 import './index.less'
+
+import * as echarts from 'echarts/core';
 
 function Home() {
     const [ time, setTime ] = useState(dayjs());
@@ -12,6 +16,20 @@ function Home() {
     
         return () => clearInterval(interval);
     }, []);
+
+    /** 监听浏览器大小变化 */
+    useEffect(() => {
+        window.addEventListener(`resize`, lib.throttle(resizeUpdate, 100));
+        return () => {
+            window.removeEventListener(`resize`, lib.throttle(resizeUpdate, 100));
+        }
+    }, [])
+
+    /** 发生变化时，告知ChartCard组件需要重渲染 */
+    function resizeUpdate(e: Event){
+        const chart = echarts.getInstanceByDom(document.getElementById('chartKey'));
+        chart && chart.resize()
+    }
 
     return <div className="home">
         <div className="title">
@@ -33,7 +51,14 @@ function Home() {
                 </div>
             </div>
             <div className="row-box">
-                测试
+                <ChartCard
+                    title="图表测试"
+                    url="/mock/getVisitList" 
+                    chartKey="chartKey" 
+                    lineDesc={{
+                        visitsList: "访问量"
+                    }}
+                />
             </div>
         </div>
     </div>

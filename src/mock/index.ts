@@ -1,2 +1,3 @@
 import "./getBondMemberList";
-import "./getPlaceList"
+import "./getPlaceList";
+import "./getVisitList"
