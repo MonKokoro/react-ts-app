@@ -1,0 +1,40 @@
+.drag-test{
+    background: #FFFFFF;
+    padding: 12px 24px;
+    .drag-content{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        .drag-component{
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+            flex: 1;
+            .drag-item{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 80px;
+                border: 1px solid #CCCCCC;
+                cursor: move;
+                background: #FFFFFF;
+
+                user-select: none;
+                -webkit-user-select: none; /* webkit浏览器 */
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* IE10+ */
+
+                transition: all .3s;
+            }
+            .drag-item:hover{
+                background: #EEEEEE;
+            }
+        }
+        .drop-component{
+            display: flex;
+            flex: 2;
+            min-width: 300px;
+            border: 1px solid #CCCCCC;
+        }
+    }
+}

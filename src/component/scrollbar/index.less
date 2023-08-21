@@ -1,0 +1,26 @@
+.scrollbar-component{
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    .scrollbar-component-bar{
+        position: absolute;
+        height: 100%;
+        width: 6px;
+        right: 4px;
+        padding: 2px 0;
+        .scrollbar-component-thumb{
+            position: relative;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+    }
+}
+
+.scrollbar-component:hover{
+    .scrollbar-component-thumb{
+        opacity: 1;
+    }
+}

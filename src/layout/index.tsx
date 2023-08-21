@@ -48,6 +48,9 @@ function Layout () {
                 title: routerMap[pathname][1]
             })
         }
+        else{
+            result = [{title: routerMap[pathname] ? routerMap[pathname][1] : "首页"}]
+        }
         setBreadcrumbItems(result)
 
     }, [location.pathname])

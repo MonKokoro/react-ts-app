@@ -21,6 +21,8 @@ import Home from "./page/home"
 import ModernTableTest from "./page/modern-table-test";
 import ModernFormTest from "./page/modern-form-test";
 import Canvas from "./page/canvas"
+import DragTest from "./page/drag-test";
+import ScrollbarTest from "./page/scrollbar-test"
 
 /** 路由映射 */
 const routerMap: any = {
@@ -28,12 +30,14 @@ const routerMap: any = {
     "canvas-practise": [<Canvas />, "canvas"],
     "modern-table-test": [<ModernTableTest />, "ModernTable测试"],
     "modern-form-test": [<ModernFormTest />, "ModernForm测试"],
+    "drag-test": [<DragTest />, "拖拽练习"],
+    "scrollbar-test": [<ScrollbarTest />, "滚动条测试"],
 }
 
 /** 面包屑映射，支持映射路由，也支持静态文本 */
 const breadcrumbMap: any = {
-    "modern-table-test": ["home"],
-    "modern-form-test": ["home"]
+    "modern-table-test": ["组件案例"],
+    "modern-form-test": ["组件案例"]
 }
 
 let routeList: any[] = []

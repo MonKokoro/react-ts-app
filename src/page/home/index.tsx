@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { NotificationTwoTone, CarTwoTone } from '@ant-design/icons';
 import dayjs from 'dayjs'
 import ChartCard from "./chart-card"
 import lib from "@/lib"
@@ -32,8 +33,30 @@ function Home() {
     }
 
     return <div className="home">
-        <div className="title">
-            欢迎回来！<span className='mark'>{window.localStorage.getItem("userName")}</span>~
+        <div className='row'>
+            <div className="title">
+                欢迎回来！<span className='mark'>{window.localStorage.getItem("userName")}</span>~ 今天过得如何？
+            </div>
+            <div className='title-card-box'>
+                <div className='title-card'>
+                    <div className='title-card-left'>
+                        <NotificationTwoTone style={{ fontSize: 32 }}/>
+                    </div>
+                    <div className='title-card-right'>
+                        <div className='title-card-right-title'>等待处理</div>
+                        <div className='title-card-right-number'>10</div>
+                    </div>
+                </div>
+                <div className='title-card'>
+                    <div className='title-card-left'>
+                        <CarTwoTone style={{ fontSize: 32 }}/>
+                    </div>
+                    <div className='title-card-right'>
+                        <div className='title-card-right-title'>访问量</div>
+                        <div className='title-card-right-number'>20</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div className='row'>
             <div className="row-box clock-box">
@@ -50,7 +73,7 @@ function Home() {
                     <div className="value">{time.format('YYYY-MM-DD HH:mm:ss')}</div>
                 </div>
             </div>
-            <div className="row-box">
+            <div className="row-box chart-box">
                 <ChartCard
                     title="图表测试"
                     url="/mock/getVisitList" 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react"
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu } from 'antd';
-import { DownOutlined, ForwardOutlined, BackwardOutlined, HomeOutlined, BarsOutlined } from '@ant-design/icons';
+import { DragOutlined, ForwardOutlined, BackwardOutlined, HomeOutlined, BarsOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import './menu.less'
 import lib from '@/lib'
 
@@ -44,6 +44,16 @@ function SysMenu() {
                         key: "/modern-form-test"
                     }
                 ]
+            },
+            {
+                label: <Link to="/drag-test">拖拽练习</Link>,
+                key: "/drag-test",
+                icon: <DragOutlined />
+            },
+            {
+                label: <Link to="/scrollbar-test">滚动条测试</Link>,
+                key: "/scrollbar-test",
+                icon: <UnorderedListOutlined />
             },
             // {
             //     iconUrl: "",

@@ -132,7 +132,7 @@ function ChartCard({ title, url, chartKey, lineDesc, color }: ChartCardProps){
             </div>
         </div>
         <div className='card-content'>
-            <div id={chartKey} style={{width: "100%", height: 220}}></div>
+            <div id={chartKey} style={{width: "100%", height: 180}}></div>
         </div>
     </div>
 }
