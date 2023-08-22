@@ -8,14 +8,27 @@
         width: 6px;
         right: 4px;
         padding: 2px 0;
+        z-index: 2;
         .scrollbar-component-thumb{
             position: relative;
             background: rgba(0,0,0,0.3);
             border-radius: 3px;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: all 0.2s;
         }
+        .scrollbar-component-thumb-clicked{
+            opacity: 1;
+            transition: none;
+        }
+    }
+    .scrollbar-component-content{
+        position: relative;
+        user-select: none;
+        transition: all 0.2s;
+    }
+    .scrollbar-component-content-clicked{
+        transition: none;
     }
 }
 

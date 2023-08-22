@@ -9,6 +9,7 @@ import './index.less'
 import Menu from '@/menu'
 import { routerMap, routeList, breadcrumbMap } from "@/router";
 import store from "@/store";
+import Scrollbar from "@/component/scrollbar";
 
 import Background from "./background";
 
@@ -155,6 +156,11 @@ function Layout () {
                                     <div ref={nodeRef} className="content-side">
                                         {currentOutlet}
                                     </div>
+                                    // <div ref={nodeRef} className="content-side content-side-scrollbar">
+                                    //     <Scrollbar style={{width: '100%', height: '100%'}}>
+                                    //         {currentOutlet}
+                                    //     </Scrollbar>
+                                    // </div>
                                 )}
                             </CSSTransition>
                         </SwitchTransition>
