@@ -19,6 +19,8 @@ export type ModernTableRef = {
     getExpandSelectedKeysMap: () => any;
     /** 获取子表的选中项详细映射，结构为 主表key: 子表详细列表 */
     getExpandSelectedRowsMap: () => any;
+    /** 清除表格的已选项，包括主表和子表 */
+    clearSelectedKeys: () => void;
 }
 
 export type ModernTableProps = {

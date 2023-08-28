@@ -50,6 +50,12 @@ for( let pageTitle in routerMap ){
     })
 }
 
+routeList.push({
+    path: '/',
+    element: <Home/>,
+    name: "首页",
+    nodeRef: createRef()
+})
 
 const router = createBrowserRouter([
     { path: '/login', element: <Login /> },

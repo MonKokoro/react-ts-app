@@ -120,11 +120,11 @@ function ModernTable({
         //     }, [])
         //     return addKeys(result)
         // },
-        // /** 清除已选中的key值 */
-        // clearSelectedKeys: () => {
-        //     clearKeys()
-        //     clearExpandKeys()
-        // },
+        /** 清除已选中的key值 */
+        clearSelectedKeys: () => {
+            clearKeys()
+            clearExpandKeys()
+        },
         // /** 清除列表数据 */
         // clearDataList: () => { return setDataList([]) }
     }))

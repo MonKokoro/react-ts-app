@@ -1,8 +1,11 @@
-import { message } from 'antd'
+import React from 'react';
+import { Modal, message } from 'antd'
 import store from "./store";
 import axios from 'axios'
 
 import { addMask, decreaseMask } from './store/needMaskCount'
+
+const { confirm } = Modal
 
 type requestProps = {
     url: string,
@@ -17,6 +20,14 @@ type requestProps = {
     config?: object
 }
 
+type confirmModalProps = {
+    content?: React.ReactNode | string,
+    url: string,
+    data?: any,
+    method?: 'GET' | 'POST',
+    success?: (res: any) => void
+}
+
 var lib = {
     config: {
         env: "online"
@@ -27,7 +38,7 @@ var lib = {
         let map = {
             dev: "http://192.168.5.17:8000",    //开发环境，如果要进行本地联调，修改这里的ip即可
             test: "",                    //测试环境
-            online: "https://",                 //线上
+            online: "http://",                 //线上
             owner: "http://127.0.0.1:8000"      //后端自测用本地环境
         }
         return map[env] || lib.config.env
@@ -137,6 +148,40 @@ var lib = {
             else {
                 message.error("未知错误")
             }
+        })
+    },
+
+    /** 弹窗确认简易方法，只支持简单情况，复杂情况不建议使用 */
+    confirmModal ({
+        content,
+        url = "/",
+        data = {},
+        method = "POST",
+        success = function () { }
+    }: confirmModalProps) {
+        let body = {}
+        if(method == "POST"){
+            body = {...data}
+            data = {}
+        }
+        let confirmModal = confirm({
+            title: "确认",
+            content: content || "确定要执行操作吗？",
+            centered: true,
+            onOk () {
+                lib.request({
+                    url,
+                    data,
+                    method,
+                    needMask: true,
+                    showMsg: true,
+                    success: (res: any) => {
+                        success(res)
+                        confirmModal.destroy()
+                    },
+                })
+            },
+            onCancel () { }
         })
     },
 

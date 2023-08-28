@@ -1,15 +1,44 @@
 import React, { useState, useRef } from 'react';
 import { Checkbox, message, Space, Alert, Tag } from 'antd';
+import useCompShow from '@/hooks/useCompShow'
 import ModernTable from '@/component/modern-table';
 import type { searchConfigProps, ModernTableRef } from '@/component/modern-table';
+import lib from '@/lib';
 import './index.less'
+
+import Detail from './detail';
 
 function ModernTableTest() {
     const actionRef = useRef<ModernTableRef>()
+    const detailDrawer = useCompShow()
     const [ rowDisabled, setRowDisabled ] = useState<boolean>(false)
     const [ expandable, setExpandable ] = useState<boolean>(false)
     const [ expandSelectable, setExpandSelectable ] = useState<boolean>(false)
     const [ selectable, setSelectable ] = useState<boolean>(false)
+
+    /** 批量删除 */
+    function batchDelete(list: (number | string)[]){
+        if(list.length){
+            lib.confirmModal({
+                content: `已选择${list.length}条数据，确定要删除吗？`,
+                url: "/mock/commonTest",
+                data: { ids: list.join(',') },
+                success: () => {
+                    actionRef.current.clearSelectedKeys()
+                    actionRef.current.search()
+                }
+            })
+        }
+        else{
+            message.warning("请至少选择一条数据")
+        }
+    }
+
+    /** 关闭弹窗/抽屉 */
+    function onClose(refreshFlag?: boolean) {
+        detailDrawer.close()
+        refreshFlag && actionRef.current.search()
+    }
 
     const searchConfig: searchConfigProps[] = [
         {
@@ -69,7 +98,8 @@ function ModernTableTest() {
             width: 200,
             render: (_: any, record: any) => {
                 return <Space>
-                    <a>详情</a>
+                    <span className='link' onClick={() => detailDrawer.open({ id: record.id })}>详情</span>
+                    <span className='link-danger' onClick={() => batchDelete([record.id])}>删除</span>
                 </Space>
             }
         }
@@ -81,6 +111,11 @@ function ModernTableTest() {
         {title: "演出名称", dataIndex: "name"},
     ]
     return <div className="modern-table-test">
+        <Detail 
+            show={detailDrawer.show}
+            data={detailDrawer.param}
+            onClose={(refreshFlag) => onClose(refreshFlag)}
+        />
         <ModernTable 
             actionRef={actionRef} 
             searchConfig={searchConfig}
@@ -109,7 +144,12 @@ function ModernTableTest() {
                     console.log("expandSelectedKeysMap", actionRef.current.getExpandSelectedKeysMap())
                     console.log("expandSelectedRowsMap", actionRef.current.getExpandSelectedRowsMap())
                     message.success("已成功获取，请在控制台查看")
-                } }
+                } },
+                {
+                    text: "批量删除",
+                    props: { danger: true },
+                    onClick: () => batchDelete(actionRef.current.getSelectedKeys())
+                }
             ]}
             rowDisabled={(record: any) => {
                 if(rowDisabled){
