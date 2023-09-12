@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 
 export default Mock.mock(/\/mock\/getVisitList*?/, 'get', ({ body }) => {
     const request = JSON.parse(body)
-    console.log(request)
     const countMap = {
         0: 3,
         1: 6,

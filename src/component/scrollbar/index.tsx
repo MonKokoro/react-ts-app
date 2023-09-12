@@ -17,12 +17,10 @@ function Scrollbar({
     const [ scrollPosition, setScrollPosition ] = useState<number>(0); //记录滚动位置
 
     useEffect(() => {
-        console.log(componentRef.current.clientHeight)
         setComponentHeight(componentRef.current.clientHeight)
     }, [componentRef.current])
 
     useEffect(() => {
-        console.log(contentRef.current.clientHeight)
         setContentHeight(contentRef.current.clientHeight)
     }, [contentRef.current])
 

@@ -4,7 +4,7 @@ import { env } from 'process'
 // import store from "../store";
 
 const baseURLMap = {
-    dev: "http://192.168.5.17:8000",    //开发环境，进行本地联调时，修改本处ip即可
+    dev: "http://192.168.x.xxx:8000",    //开发环境，进行本地联调时，修改本处ip即可
     test: "",                           //测试环境
     online: "https://",                 //线上
     owner: "http://127.0.0.1:8000"      //后端自测用本地环境

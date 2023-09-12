@@ -11,7 +11,7 @@
  * A：createBrowserRouter是React Router v6.4的更新，其实无非是从写节点变成了写js，个人感觉是比以前的BrowserRouter好用一些。但这次更新说实话争议挺多的，因为塞了很多看起来用处不是很大的功能（比如说表单请求，将表单提交功能上升到路由级，但页面级足以应付极大多数情况），包体一下子大了很多，挺多人觉得这就是依托答辩……嘛，见仁见智吧，说不定哪一天这些新功能就派上用场了呢
 */
 
-import React, { createRef } from "react"
+import React, { createRef, useMemo } from "react"
 import { createBrowserRouter } from 'react-router-dom';
 
 import Login from "./page/login";
@@ -56,6 +56,12 @@ routeList.push({
     name: "首页",
     nodeRef: createRef()
 })
+
+function MemoPage({Page}){
+    let memoPage = useMemo(() => <Page />, [])
+    return memoPage
+}
+
 
 const router = createBrowserRouter([
     { path: '/login', element: <Login /> },

@@ -4,4 +4,5 @@ import "./getBondMemberList";
 import "./getMemberList";
 import "./getPlaceList";
 import "./getVisitList";
-import "./getMessageList"
+import "./getMessageList";
+import "./getMenuList"

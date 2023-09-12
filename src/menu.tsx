@@ -5,9 +5,12 @@ import { Menu } from 'antd';
 import { DragOutlined, ForwardOutlined, BackwardOutlined, HomeOutlined, BarsOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import './menu.less'
 import lib from '@/lib'
+import axios from '@/axios'
 
 import store from "./store";
 import { collapsedSet } from './store/collapsed'
+import { addPage } from '@/store/pageList'
+import { routerMap, routeList, breadcrumbMap } from "@/router";
 
 function SysMenu() {
     const location = useLocation()
@@ -24,9 +27,16 @@ function SysMenu() {
     })
 
     useEffect(() => {
+        // getMenuList()
         setMenuList([
             {
-                label: <Link to="/home">首页</Link>,
+                label: <Link 
+                    to="/home" 
+                    onClick={() => dispatch(addPage({
+                        key: 'home',
+                        label: routerMap['home'][1]
+                    }))}
+                >首页</Link>,
                 key: "/home",
                 icon: <HomeOutlined />
             },
@@ -36,30 +46,49 @@ function SysMenu() {
                 icon: <BarsOutlined />,
                 children: [
                     {
-                        label: <Link to="/modern-table-test">ModernTable</Link>,
+                        label: <Link 
+                            to="/modern-table-test"
+                            onClick={() => dispatch(addPage({
+                                key: 'modern-table-test',
+                                label: routerMap['modern-table-test'][1]
+                            }))}
+                        >ModernTable</Link>,
                         key: "/modern-table-test"
                     },
                     {
-                        label: <Link to="/modern-form-test">ModernForm</Link>,
+                        label: <Link 
+                            to="/modern-form-test"
+                            onClick={() => dispatch(addPage({
+                                key: 'modern-form-test',
+                                label: routerMap['modern-form-test'][1]
+                            }))}
+                        >ModernForm</Link>,
                         key: "/modern-form-test"
                     }
                 ]
             },
             {
-                label: <Link to="/drag-test">拖拽练习</Link>,
+                label: <Link 
+                    to="/drag-test"
+                    onClick={() => dispatch(addPage({
+                        key: 'drag-test',
+                        label: routerMap['drag-test'][1]
+                    }))}
+                >拖拽练习</Link>,
                 key: "/drag-test",
                 icon: <DragOutlined />
             },
             {
-                label: <Link to="/scrollbar-test">滚动条测试</Link>,
+                label: <Link 
+                    to="/scrollbar-test"
+                    onClick={() => dispatch(addPage({
+                        key: 'scrollbar-test',
+                        label: routerMap['scrollbar-test'][1]
+                    }))}
+                >滚动条测试</Link>,
                 key: "/scrollbar-test",
                 icon: <UnorderedListOutlined />
             },
-            // {
-            //     iconUrl: "",
-            //     label: "canvas练习",
-            //     key: "/canvas-practise"
-            // }
         ])
     }, [])
 
@@ -78,6 +107,7 @@ function SysMenu() {
             setFocus(location.pathname)
     }, [location])
 
+    /** 改变菜单收缩状态 */
     function changeCollapsed(e: any){
         if(e.currentTarget.innerWidth < 780){
             dispatch(collapsedSet(true));
@@ -85,6 +115,56 @@ function SysMenu() {
         else{
             dispatch(collapsedSet(false));
         }
+    }
+
+    /** 获取菜单列表 */
+    function getMenuList(){
+        axios.request({
+            url: "/mock/getMenuList",
+            method: "GET"
+        }).then( ({data}) => {
+            setMenuList(data.reduce((prev: any[], curr: any) => {
+                if(curr.children?.length){
+                    prev.push({
+                        label: curr.name,
+                        key: curr.name,
+                        icon: '',
+                        children: curr.children.reduce((pre: any[], cur: any) => {
+                            pre.push({
+                                label: () => <Link
+                                    to={`/${cur.url}`}
+                                    onClick={() => {
+                                        dispatch(addPage({
+                                            key: cur.url,
+                                            label: routerMap[cur.name][1]
+                                        }))
+                                    }}
+                                >{cur.name}</Link>,
+                                key: cur.url
+                            })
+                            return pre
+                        }, [])
+                    })
+                }
+                else{
+                    prev.push({
+                        label: () => <Link
+                            to={`/${curr.url}`}
+                            onClick={() => {
+                                dispatch(addPage({
+                                    key: curr.url,
+                                    label: routerMap[curr.name][1]
+                                }))
+                            }}
+                        >{curr.name}</Link>,
+                        key: curr.url,
+                        icon: ''
+                    })
+                }
+
+                return prev
+            }, []))
+        })
     }
     
     /**

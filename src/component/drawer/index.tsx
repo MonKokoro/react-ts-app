@@ -27,7 +27,7 @@ function CommonDrawer({
         onClose={() => {
             onClose()
         }}
-        visible={show}
+        open={show}
         destroyOnClose={doNotDestory ? false : true}
         forceRender={forceRender}
         closable={false}
