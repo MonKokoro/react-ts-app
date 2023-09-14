@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { AliveScope, KeepAlive } from 'react-activation';
 import { Provider } from 'react-redux';
 import App from './App';
 import store from './store';
@@ -15,6 +16,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <Provider store={store}>
-        <App />
+        <AliveScope>
+            <App />
+        </AliveScope>
     </Provider>
 );

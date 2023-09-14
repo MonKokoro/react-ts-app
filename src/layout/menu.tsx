@@ -107,7 +107,7 @@ function SysMenu({ menuList }: SysMenuProps) {
                 theme="dark"
             />
             <div className='menu-collapsed-icon' onClick={() => setCollapsed(!collapsed)}>
-                {collapsed ? <ForwardOutlined className='menu-collapsed' rev={undefined} /> : <BackwardOutlined className='menu-collapsed' rev={undefined}/>}
+                {collapsed ? <ForwardOutlined className='menu-collapsed' /> : <BackwardOutlined className='menu-collapsed'/>}
             </div>
         </div>
     </div>

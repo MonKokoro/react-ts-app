@@ -192,7 +192,7 @@ function AdvancedSearchForm({
                         <UpOutlined className={`icon ${!expand && "icon-no-expand"}`}/> 
                         {expand ? "收起" : "展开"}
                     </Button>}
-                    <Button type="primary" onClick={() => submit()}>查询</Button>
+                    <Button type="primary" onClick={() => submit()} >查询</Button>
                     <Button onClick={() => { 
                         form.resetFields() 
                         search({})

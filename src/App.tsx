@@ -1,8 +1,8 @@
 import React, { createRef } from 'react';
 import { BrowserRouter, Routes, Route, RouterProvider } from 'react-router-dom';
 
-import Login from './page/login';
-import Layout from './layout';
+// import Login from './page/login';
+// import Layout from './layout';
 
 import router from './router'
 

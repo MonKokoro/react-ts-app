@@ -13,6 +13,7 @@
 
 import React, { createRef, useMemo } from "react"
 import { createBrowserRouter } from 'react-router-dom';
+import { KeepAlive } from 'react-activation'
 
 import Login from "./page/login";
 import Layout from "./layout";
@@ -24,14 +25,16 @@ import Canvas from "./page/canvas"
 import DragTest from "./page/drag-test";
 import ScrollbarTest from "./page/scrollbar-test"
 
+import ErrorPage from "./page/error-page";
+
 /** 路由映射 */
 const routerMap: any = {
-    "home": [<Home/>, "首页"],
-    "canvas-practise": [<Canvas />, "canvas"],
-    "modern-table-test": [<ModernTableTest />, "ModernTable测试"],
-    "modern-form-test": [<ModernFormTest />, "ModernForm测试"],
-    "drag-test": [<DragTest />, "拖拽练习"],
-    "scrollbar-test": [<ScrollbarTest />, "滚动条测试"],
+    "home": [<Home/>, "首页", true],
+    "canvas-practise": [<Canvas />, "canvas", true],
+    "modern-table-test": [<ModernTableTest />, "ModernTable测试", true],
+    "modern-form-test": [<ModernFormTest />, "ModernForm测试", true],
+    "drag-test": [<DragTest />, "拖拽练习", true],
+    "scrollbar-test": [<ScrollbarTest />, "滚动条测试", true],
 }
 
 /** 面包屑映射，支持映射路由，也支持静态文本 */
@@ -44,7 +47,9 @@ let routeList: any[] = []
 for( let pageTitle in routerMap ){
     routeList.push({
         path: `${pageTitle}`,
-        element: routerMap[pageTitle][0],
+        element: routerMap[pageTitle][2] ? <KeepAlive name={pageTitle}>
+            {routerMap[pageTitle][0]}
+        </KeepAlive> : routerMap[pageTitle][0],
         name: routerMap[pageTitle][1],
         nodeRef: createRef()
     })
@@ -52,15 +57,22 @@ for( let pageTitle in routerMap ){
 
 routeList.push({
     path: '/',
-    element: <Home/>,
+    element: <KeepAlive name="home"><Home/></KeepAlive>,
     name: "首页",
     nodeRef: createRef()
 })
 
-function MemoPage({Page}){
-    let memoPage = useMemo(() => <Page />, [])
-    return memoPage
-}
+routeList.push({
+    path: '*',
+    element: <ErrorPage/>,
+    name: "出错啦！",
+    nodeRef: createRef()
+})
+
+// function MemoPage({Page}){
+//     let memoPage = useMemo(() => <Page />, [])
+//     return memoPage
+// }
 
 
 const router = createBrowserRouter([
@@ -68,6 +80,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         element: <Layout />,
+        errorElement: <ErrorPage />,
         children: routeList.map((route) => ({
             index: route.path === '/',
             path: route.path === '/' ? undefined : route.path,

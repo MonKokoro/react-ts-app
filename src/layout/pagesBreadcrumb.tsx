@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** 页头面包屑 - 多标签模式 */
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { useAliveController } from 'react-activation'
 import { Tabs } from 'antd'
 import store from "@/store";
 import { useDispatch } from 'react-redux';
@@ -9,15 +12,18 @@ import { routerMap } from "@/router";
 function PagesBreadcrumb() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const { drop } = useAliveController()
     const [ activeKey, setActiveKey ] = useState<string>()
     const [ pageList, setPageList ] = useState([])
 
     useEffect(() => {
         const pathname = location.pathname.replace('/', '') || 'home'
-        dispatch(addPage({
-            key: pathname,
-            label: routerMap[pathname][1]
-        }))
+        if(routerMap[pathname]){
+            dispatch(addPage({
+                key: pathname,
+                label: routerMap[pathname][1]
+            }))
+        }
     }, [])
 
     useEffect(() => {
@@ -28,7 +34,6 @@ function PagesBreadcrumb() {
     store.subscribe(() => {
         setPageList(store.getState().pageList)
     })
-    console.log(pageList)
 
     return <div className="pages-breadcrumb">
         <Tabs
@@ -52,6 +57,7 @@ function PagesBreadcrumb() {
                         return false
                     })
                     dispatch(removePage(targetPage))
+                    drop(targetPage.key)
                     if(targetPage.key === activeKey){
                         let nextIndex = 0
                         if(pageList[currentIndex+1]){

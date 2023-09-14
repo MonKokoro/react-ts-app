@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from "react"
 import { useLocation, useNavigate, useOutlet } from 'react-router-dom';
+import { useDispatch } from "react-redux";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
-import { ConfigProvider, Input, Avatar, Spin, Breadcrumb } from 'antd';
+import { useAliveController } from 'react-activation'
+import { ConfigProvider, Avatar, Spin } from 'antd';
 import { SkinFilled, DownOutlined } from '@ant-design/icons';
 import zhCN from 'antd/locale/zh_CN';
 import './index.less'
 
 import Menu from './menu'
-import { routerMap, routeList, breadcrumbMap } from "@/router";
+import { routeList } from "@/router";
 import store from "@/store";
-import Scrollbar from "@/component/scrollbar";
+// import Scrollbar from "@/component/scrollbar";
 import axios from "@/axios";
+import { clearPage } from '@/store/pageList'
 
 import Background from "./background";
+import SingleBreadcrumb from "./singleBreadcrumb";
 import PagesBreadcrumb from "./pagesBreadcrumb";
 
 function Layout () {
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const currentOutlet = useOutlet()
+    const aliveController = useAliveController()
     const [ userName, setUserName ] = useState<string>()
     const [ maskCount, setMaskCount ] = useState<number>(0)
     const [ theme, setTheme ] = useState<string>(window.localStorage.getItem("theme") || "#13547A")
     const [ layout, setLayout ] = useState<string>(window.localStorage.getItem("layout") || "single")
-    const [ breadcrumbItems, setBreadcrumbItems ] = useState<any>([])
     const [ menuList, setMenuList ] = useState([])
 
     useEffect(() => {
@@ -35,30 +40,6 @@ function Layout () {
             navigate('/login')
         }
     }, [])
-
-    useEffect(() => {
-        const pathname = location.pathname.replace('/', '')
-        let result = [{title: "首页"}]
-        if(breadcrumbMap[pathname]){
-            result = breadcrumbMap[pathname].reduce((prev: any, curr: any) => {
-                prev.push({
-                    title: routerMap[curr] ? 
-                        <a onClick={() => navigate(`/${curr}`)}>{routerMap[curr][1]}</a>
-                        :
-                        curr,
-                })
-                return prev
-            }, [])
-            result.push({
-                title: routerMap[pathname][1]
-            })
-        }
-        else{
-            result = [{title: routerMap[pathname] ? routerMap[pathname][1] : "首页"}]
-        }
-        setBreadcrumbItems(result)
-
-    }, [location.pathname])
 
     store.subscribe(() => {
         setMaskCount(store.getState().needMaskCount)
@@ -80,19 +61,6 @@ function Layout () {
         })
     }
 
-    /** 面包屑内容 */
-    // let breadcrumbItems = breadcrumbMap[location.pathname] ? 
-    //     breadcrumbMap[location.pathname].reduce((prev: any, curr: any) => {
-    //         prev.push({
-    //             title: routerMap[curr] ? 
-    //                 <a onClick={() => navigate(routerMap[curr][1])}>{routerMap[curr][2]}</a>
-    //                 :
-    //                 curr,
-    //         })
-    //     }, [])
-    //     :
-    //     [{title: "首页"}]
-
     return <ConfigProvider
         locale={zhCN}
         theme={{
@@ -107,7 +75,7 @@ function Layout () {
                 </div>
                 <div className="right">
                     <div className="skin">
-                        <SkinFilled className="skin-icon" color="white" rev={undefined}/>
+                        <SkinFilled className="skin-icon" color="white"/>
                         <div className="skin-modal">
                             <div className="title">选择主题</div>
                             <div className="content">
@@ -130,6 +98,9 @@ function Layout () {
                                     onClick={() => {
                                         setLayout("single")
                                         window.localStorage.setItem("layout", "single")
+                                        /** 切换至单页应用时，清除现有的多标签列表和页面状态缓存 */
+                                        dispatch(clearPage())
+                                        aliveController.clear()
                                     }
                                 }>单页应用</div>
                                 <div 
@@ -145,7 +116,7 @@ function Layout () {
                     <div className="user">
                         <Avatar className="user-avatar" src={<img src={require("@/assets/image/anya.png")} />} />
                         <span className="user-name">{userName}</span>
-                        <DownOutlined className="user-arrow" rev={undefined}/>
+                        <DownOutlined className="user-arrow"/>
                     </div>
                 </div>
                 <Background color={theme}/>
@@ -154,11 +125,8 @@ function Layout () {
             <div className='content-box'>
                 <Menu menuList={menuList}/>
                 <div className="content">
-                    <div className="breadcrumb">
-                        {layout === "multiple" ? <PagesBreadcrumb /> : <Breadcrumb
-                            separator=">"
-                            items={breadcrumbItems}
-                        />}
+                    <div style={{minHeight: 42}}>
+                        {layout === "multiple" ? <PagesBreadcrumb /> : <SingleBreadcrumb />}
                     </div>
                     <div className="container">
                         <CSSTransition

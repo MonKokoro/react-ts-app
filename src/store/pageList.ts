@@ -21,6 +21,11 @@ export const pageListSlice = createSlice({
                     prev.push(curr)
                 return prev
             }, [])
+        },
+        clearPage: (state: pageListItemProps[]) => {
+            return state = [
+                {key: "home", label: "首页", closeIcon: false}
+            ]
         }
     },
 })
@@ -30,6 +35,6 @@ export type pageListItemProps = {
     key: string,
     closeIcon?: boolean
 }
-export const { addPage, removePage } = pageListSlice.actions
+export const { addPage, removePage, clearPage } = pageListSlice.actions
 
 export default pageListSlice.reducer;
