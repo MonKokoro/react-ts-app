@@ -7,13 +7,13 @@ export default Mock.mock(/\/mock\/getMenuList*?/, 'get', ({ body }) => {
             {
                 url: "home",
                 name: "首页",
-                icon: "",
+                icon: "HomeOutlined",
                 children: []
             },
             {
                 url: "",
                 name: "组件案例",
-                icon: "",
+                icon: "BarsOutlined",
                 children: [
                     {url: "modern-table-test", name: "ModernTable"},
                     {url: "modern-form-test", name: "ModernForm"}
@@ -22,13 +22,13 @@ export default Mock.mock(/\/mock\/getMenuList*?/, 'get', ({ body }) => {
             {
                 url: "drag-test",
                 name: "拖拽测试",
-                icon: "",
+                icon: "DragOutlined",
                 children: []
             },
             {
                 url: "scrollbar-test",
                 name: "滚动条测试",
-                icon: "",
+                icon: "UnorderedListOutlined",
                 children: []
             }
         ], 

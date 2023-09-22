@@ -20,6 +20,7 @@ import Layout from "./layout";
 
 import Home from "./page/home"
 import ModernTableTest from "./page/modern-table-test";
+import ModernTableTestDetail from "./page/modern-table-test-detail";
 import ModernFormTest from "./page/modern-form-test";
 import Canvas from "./page/canvas"
 import DragTest from "./page/drag-test";
@@ -29,27 +30,42 @@ import ErrorPage from "./page/error-page";
 
 /** 路由映射 */
 const routerMap: any = {
-    "home": [<Home/>, "首页", true],
-    "canvas-practise": [<Canvas />, "canvas", true],
-    "modern-table-test": [<ModernTableTest />, "ModernTable测试", true],
-    "modern-form-test": [<ModernFormTest />, "ModernForm测试", true],
-    "drag-test": [<DragTest />, "拖拽练习", true],
-    "scrollbar-test": [<ScrollbarTest />, "滚动条测试", true],
+    "home": [<Home/>, "首页"],
+    "canvas-practise": [<Canvas />, "canvas"],
+    "modern-table-test": [<ModernTableTest />, "ModernTable测试"],
+    "modern-table-test-detail": [<ModernTableTestDetail />, "ModernTable测试-详情"],
+    "modern-form-test": [<ModernFormTest />, "ModernForm测试"],
+    "drag-test": [<DragTest />, "拖拽练习"],
+    "scrollbar-test": [<ScrollbarTest />, "滚动条测试"],
 }
 
 /** 面包屑映射，支持映射路由，也支持静态文本 */
 const breadcrumbMap: any = {
     "modern-table-test": ["组件案例"],
+    "modern-table-test-detail": ["组件案例", "modern-table-test"],
     "modern-form-test": ["组件案例"]
+}
+
+/** 
+ * 特殊路由页配置
+ * 默认所有页面都会通过react-activation缓存，不可打开多个 
+ * 如果需要配置【无需缓存】，配置needNotAlive: true
+ * 如果需要配置【根据url参数打开多个】，配置multiple: true
+ * */
+const specialRouteMap: any = {
+    "modern-table-test-detail": { multiple: true }
 }
 
 let routeList: any[] = []
 for( let pageTitle in routerMap ){
     routeList.push({
         path: `${pageTitle}`,
-        element: routerMap[pageTitle][2] ? <KeepAlive name={pageTitle}>
-            {routerMap[pageTitle][0]}
-        </KeepAlive> : routerMap[pageTitle][0],
+        element: specialRouteMap[pageTitle] ?.needNotAlive ? 
+            routerMap[pageTitle][0]
+            : 
+            <KeepAlive name={pageTitle}>
+                {routerMap[pageTitle][0]}
+            </KeepAlive>,
         name: routerMap[pageTitle][1],
         nodeRef: createRef()
     })
@@ -69,12 +85,6 @@ routeList.push({
     nodeRef: createRef()
 })
 
-// function MemoPage({Page}){
-//     let memoPage = useMemo(() => <Page />, [])
-//     return memoPage
-// }
-
-
 const router = createBrowserRouter([
     { path: '/login', element: <Login /> },
     {
@@ -89,5 +99,5 @@ const router = createBrowserRouter([
     }
 ])
 
-export { routerMap, routeList, breadcrumbMap }
+export { routerMap, routeList, breadcrumbMap, specialRouteMap }
 export default router

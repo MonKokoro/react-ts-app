@@ -9,12 +9,15 @@ import axios from '@/axios'
 
 import store from "@/store";
 import { collapsedSet } from '@/store/collapsed'
-import { addPage } from '@/store/pageList'
+// import { addPage } from '@/store/pageList'
 import { routerMap, routeList, breadcrumbMap } from "@/router";
+import { iconJson } from "@/common/iconMap"
+import { usePage } from "@/hooks"
 
 function SysMenu({ menuList }: SysMenuProps) {
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const location = useLocation()
+    const page = usePage()
     const dispatch = useDispatch();
 
     const [ list, setList ] = useState<any>([])
@@ -31,16 +34,17 @@ function SysMenu({ menuList }: SysMenuProps) {
                 prev.push({
                     label: curr.name,
                     key: curr.name,
-                    icon: '',
+                    icon: iconJson[curr.icon] || '',
                     children: curr.children.reduce((pre: any[], cur: any) => {
                         pre.push({
                             label: <div
                                 onClick={() => {
-                                    navigate(`/${cur.url}`)
-                                    dispatch(addPage({
-                                        key: cur.url,
-                                        label: routerMap[cur.url][1]
-                                    }))
+                                    page.openPage(`/${cur.url}`)
+                                    // navigate(`/${cur.url}`)
+                                    // dispatch(addPage({
+                                    //     key: cur.url,
+                                    //     label: routerMap[cur.url][1]
+                                    // }))
                                 }}
                             >{cur.name}</div>,
                             key: cur.url
@@ -53,15 +57,16 @@ function SysMenu({ menuList }: SysMenuProps) {
                 prev.push({
                     label: <div
                         onClick={() => {
-                            navigate(`/${curr.url}`)
-                            dispatch(addPage({
-                                key: curr.url,
-                                label: routerMap[curr.url][1]
-                            }))
+                            // navigate(`/${curr.url}`)
+                            // dispatch(addPage({
+                            //     key: curr.url,
+                            //     label: routerMap[curr.url][1]
+                            // }))
+                            page.openPage(`/${curr.url}`)
                         }}
                     >{curr.name}</div>,
                     key: curr.url,
-                    icon: ''
+                    icon: iconJson[curr.icon] || ''
                 })
             }
 
@@ -111,55 +116,8 @@ function SysMenu({ menuList }: SysMenuProps) {
             </div>
         </div>
     </div>
-
-    // 考虑到主要面向B端，自己设计的菜单过于花哨了，暂时废弃
-    // return <div className='menu'>
-    //     {menuList.map(item => {
-    //         if(!item.children){
-    //             const focus = focusMenuUrl === item.url
-    //             return <Link to={item.url} key={item.url}>
-    //                 <div className={`menu-item ${focus ? "menu-item-focus" : "menu-item-unfocus"}`}>
-    //                     <div className="icon"></div>
-    //                     <div className="label">{item.name}</div>
-    //                 </div>
-    //             </Link>
-    //         }
-                
-    //         else{
-    //             const expand = expandMenuMap[item.url]
-    //             return <Fragment key={item.name}>
-    //                 <div 
-    //                     className={`menu-item menu-item-unfocus`}
-    //                     onClick={() => {
-    //                         setExpandMenuMap({
-    //                             ...expandMenuMap,
-    //                             [item.url]: !expandMenuMap[item.url]
-    //                         })
-    //                     }}
-    //                     key={item.name}
-    //                 >
-    //                     <div className="icon"></div>
-    //                     <div className="label-expandable">{item.name}</div>
-    //                     <div className={`arrow ${expand ? "arrow-expand" : ""}`}><DownOutlined /></div>
-    //                 </div>
-    //                 <div className={`sub-menu ${expand ? "sub-menu-close" : ""}`}>
-    //                     {item.children.map(subItem => {
-    //                         const focus = focusMenuUrl === subItem.url
-    //                         // 切换路由时，重置蒙版计数状态
-    //                         return <Link to={subItem.url} key={subItem.url} onClick={() => store.dispatch(resetMask())}>
-    //                             <div 
-    //                                 className={`menu-item sub-menu-item ${focus ? "menu-item-focus" : "menu-item-unfocus"} ${expand ? "sub-menu-item-close" : ""}`}
-    //                             >
-    //                                 <div className="label">{subItem.name}</div>
-    //                             </div>
-    //                         </Link>
-    //                     })}
-    //                 </div>
-    //             </Fragment>
-    //         }
-    //     })}
-    // </div>
 }
+
 export type SysMenuProps = {
     menuList: {
         label: string,

@@ -1,34 +1,42 @@
 /** 页头面包屑 - 多标签模式 */
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { useAliveController } from 'react-activation'
 import { Tabs } from 'antd'
 import store from "@/store";
 import { useDispatch } from 'react-redux';
 import { addPage, removePage } from '@/store/pageList'
-import { routerMap } from "@/router";
+import { routerMap, specialRouteMap } from "@/router";
+import { usePage } from "@/hooks"
 
 function PagesBreadcrumb() {
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
+    const location = useLocation()
     const dispatch = useDispatch()
     const { drop } = useAliveController()
+    const page = usePage()
     const [ activeKey, setActiveKey ] = useState<string>()
     const [ pageList, setPageList ] = useState([])
 
     useEffect(() => {
         const pathname = location.pathname.replace('/', '') || 'home'
         if(routerMap[pathname]){
-            dispatch(addPage({
-                key: pathname,
-                label: routerMap[pathname][1]
-            }))
+            page.openPage({
+                url: location.pathname,
+                param: page.searchToJson(location.search)
+            })
+            // dispatch(addPage({
+            //     key: pathname,
+            //     label: routerMap[pathname][1]
+            // }))
         }
     }, [])
 
     useEffect(() => {
-        const pathname = location.pathname.replace('/', '')
-        setActiveKey(pathname)
+        // console.log(location)
+        // const pathname = location.pathname.replace('/', '')
+        setActiveKey(`${location.pathname}${location.search}`)
     }, [location.pathname])
 
     store.subscribe(() => {
@@ -43,7 +51,12 @@ function PagesBreadcrumb() {
             tabPosition={'top'}
             items={pageList}
             onChange={(key) => {
-                navigate(`/${key}`)
+                const pageItem = pageList.find((item) => item.key === key)
+                page.openPage({
+                    url: `/${pageItem.routeKey}`,
+                    param: pageItem.param
+                })
+                // navigate(`/${key}`)
                 setActiveKey(key)
             }}
             onEdit={(targetKey, action) => {
@@ -67,7 +80,11 @@ function PagesBreadcrumb() {
                             nextIndex = currentIndex - 1
                         }
                         setActiveKey(pageList[nextIndex].key)
-                        navigate(`/${pageList[nextIndex].key}`)
+                        page.openPage({
+                            url: `/${pageList[nextIndex].routeKey}`,
+                            param: pageList[nextIndex].param
+                        })
+                        // navigate(`/${pageList[nextIndex].key}`)
                     }
                 }
             }}

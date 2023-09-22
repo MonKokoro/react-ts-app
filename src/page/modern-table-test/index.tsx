@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Checkbox, message, Space, Alert, Tag } from 'antd';
-import useCompShow from '@/hooks/useCompShow'
+import { useCompShow, usePage } from '@/hooks';
 import ModernTable from '@/component/modern-table';
 import type { searchConfigProps, ModernTableRef } from '@/component/modern-table';
 import lib from '@/lib';
@@ -11,6 +11,7 @@ import Detail from './detail';
 function ModernTableTest() {
     const actionRef = useRef<ModernTableRef>()
     const detailDrawer = useCompShow()
+    const page = usePage()
     const [ rowDisabled, setRowDisabled ] = useState<boolean>(false)
     const [ expandable, setExpandable ] = useState<boolean>(false)
     const [ expandSelectable, setExpandSelectable ] = useState<boolean>(false)
@@ -95,10 +96,15 @@ function ModernTableTest() {
         {
             title: "操作",
             dataIndex: "operation",
-            width: 200,
+            width: 230,
             render: (_: any, record: any) => {
                 return <Space>
                     <span className='link' onClick={() => detailDrawer.open({ id: record.id })}>详情</span>
+                    <span className='link' onClick={() => page.openPage({
+                        url: "/modern-table-test-detail",
+                        // label: "详情测试",
+                        param: { id: record.id }
+                    })}>页面详情</span>
                     <span className='link-danger' onClick={() => batchDelete([record.id])}>删除</span>
                 </Space>
             }

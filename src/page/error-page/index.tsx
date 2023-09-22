@@ -12,7 +12,7 @@ function ErrorPage() {
                 <div className='error-desc'>页面没有找到哦...(PД`q。)麻烦检查一下路径对不对啦...</div>
                 <div className='error-bottom'>
                     <Button type='primary' onClick={() => {
-                        page.jumpTo('home')
+                        page.openPage('home')
                         page.closePage('home')
                     }}>返回首页</Button>
                 </div>

@@ -1,13 +1,14 @@
 /** 页面跳转hook */
 
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import store from "@/store";
 import { addPage, removePage } from '@/store/pageList'
-import { routerMap } from "@/router";
+import { routerMap, specialRouteMap } from "@/router";
 
 export default function usePage() {
+    const location = useLocation()
     const navigate = useNavigate()
     const dispatch = useDispatch();
     
@@ -17,26 +18,83 @@ export default function usePage() {
         setLayout(window.localStorage.getItem("layout") || "single")
     }, [window.localStorage.getItem("layout")])
 
-    /** 页面跳转方法 */
-    function jumpTo(obj: jumpToObject | string){
+    /** 将url与参数组装成字符串 */
+    function toUrl(url: string, param: object){
+        if(param !== {}){
+            let result = `${url}?`
+            for(let key in param){
+                result += `${key}=${param[key]}&`
+            }
+            result = result.substring(0, result.length-1)
+            return result
+        }
+        return url
+    }
+
+    /** 将search字符串转换为对象 */
+    function searchToJson(search: string){
+        let result = {}
+        if(result){
+            const searchParams = new URLSearchParams(search)
+            const params: any = searchParams.entries()
+            for(let item of params){
+                result[item[0]] = item[1]
+            }
+            // const searchStrs = search.substring(1, search.length).split('&')
+            // result = searchStrs.reduce((prev, curr) => {
+            //     const paramItem = curr.split('=')
+            //     prev[paramItem[0]] = paramItem[1]
+            //     return prev
+            // }, {})
+        }
+        return result
+    }
+
+    /** 
+     * 页面跳转方法 
+     * url请在开头加上/，举例：/modern-table
+     * 需要传参的情景，请使用param参数，或者使用?接在url后面
+    */
+    function openPage(obj: openPageObject | string){
+        const pageList = store.getState().pageList
         let url = ''
         let label = ''
         let param = {}
         if(obj instanceof Object){
             url = obj.url
-            label = obj.label || (routerMap[obj.url] ? routerMap[obj.url][1] : '')
+            label = obj.label || (routerMap[obj.url.replace('/', '')] ? routerMap[obj.url.replace('/', '')][1] : '')
             param = obj.param || {}
         }
         else{
             url = obj
-            label = routerMap[obj] ? routerMap[obj][1] : ''
+            label = routerMap[obj.replace('/', '')] ? routerMap[obj.replace('/', '')][1] : ''
         }
-        navigate(url)
+        
+        navigate(toUrl(url, param))
+
+        /**
+         * 多标签模式下，如果标签上不存在需要打开的页面，则添加标签
+         * 如果需要打开的页面允许打开多个：根据保存的param判断是否已被打开，不存在则添加
+         */
         if(layout === "multiple"){
-            dispatch(addPage({
-                key: url,
-                label
-            }))
+            if(specialRouteMap[url.replace('/', '')] ?.multiple){
+                if(!pageList.some(record => (record.routeKey === url.replace('/', '') && record.param === param)))
+                    return dispatch(addPage({
+                        key: toUrl(url, param),
+                        routeKey: url.replace('/', ''),
+                        param,
+                        label
+                    }))
+            }
+            else{
+                if(!pageList.some(record => record.routeKey === url.replace('/', '')))
+                    return dispatch(addPage({
+                        key: url,
+                        routeKey: url.replace('/', ''),
+                        param,
+                        label
+                    }))
+            }
         }
     }
 
@@ -45,10 +103,15 @@ export default function usePage() {
         removePage(url.replace('/', ''))
     }
 
-    return { jumpTo, closePage }
+    /** 获取当前路由下的param */
+    function getParam():any{
+        return searchToJson(window.location.search)
+    }
+
+    return { openPage, closePage, searchToJson, getParam }
 }
 
-export type jumpToObject = {
+export type openPageObject = {
     url: string,
     label?: string,
     param?: any
