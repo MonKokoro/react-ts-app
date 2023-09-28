@@ -26,6 +26,10 @@ export const pageListSlice = createSlice({
             return state = [
                 {key: "/home", routeKey: "home", label: "首页", param: {}, closeIcon: false}
             ]
+        },
+        setPages: (state: pageListItemProps[], action) => {
+            console.log(action.payload)
+            return state = [...action.payload]
         }
     },
 })
@@ -37,6 +41,6 @@ export type pageListItemProps = {
     param?: any,
     closeIcon?: boolean
 }
-export const { addPage, removePage, clearPage } = pageListSlice.actions
+export const { addPage, removePage, clearPage, setPages } = pageListSlice.actions
 
 export default pageListSlice.reducer;

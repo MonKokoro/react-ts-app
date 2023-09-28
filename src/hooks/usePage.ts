@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import store from "@/store";
-import { addPage, removePage } from '@/store/pageList'
+import { addPage, removePage, setPages } from '@/store/pageList'
 import { routerMap, specialRouteMap } from "@/router";
 
 export default function usePage() {
@@ -78,7 +78,7 @@ export default function usePage() {
          */
         if(layout === "multiple"){
             if(specialRouteMap[url.replace('/', '')] ?.multiple){
-                if(!pageList.some(record => (record.routeKey === url.replace('/', '') && record.param === param)))
+                if(!pageList.some(record => record.key === toUrl(url, param)))
                     return dispatch(addPage({
                         key: toUrl(url, param),
                         routeKey: url.replace('/', ''),
@@ -103,12 +103,21 @@ export default function usePage() {
         removePage(url.replace('/', ''))
     }
 
+    /** 仅保留当前页 */
+    function reservePage(obj: openPageObject | string){
+        const pageList = store.getState().pageList
+        let key = obj instanceof Object ? toUrl(obj.url, obj.param) : obj
+        return dispatch(
+            setPages(pageList.filter(item => item.routeKey === 'home' || item.key === key))
+        )
+    }
+
     /** 获取当前路由下的param */
     function getParam():any{
         return searchToJson(window.location.search)
     }
 
-    return { openPage, closePage, searchToJson, getParam }
+    return { openPage, closePage, reservePage, searchToJson, getParam }
 }
 
 export type openPageObject = {

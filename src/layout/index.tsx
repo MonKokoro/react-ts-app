@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useLocation, useNavigate, useOutlet } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
@@ -8,18 +8,20 @@ import { SkinFilled, DownOutlined } from '@ant-design/icons';
 import zhCN from 'antd/locale/zh_CN';
 import './index.less'
 
-import Menu from './menu'
 import { routeList } from "@/router";
 import store from "@/store";
 // import Scrollbar from "@/component/scrollbar";
 import axios from "@/axios";
 import { clearPage } from '@/store/pageList'
+import lib from "@/lib";
 
+import Menu from './menu'
 import Background from "./background";
 import SingleBreadcrumb from "./singleBreadcrumb";
 import PagesBreadcrumb from "./pagesBreadcrumb";
 
 function Layout () {
+    const tabsBoxRef = useRef<any>()
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -125,7 +127,7 @@ function Layout () {
             <div className='content-box'>
                 <Menu menuList={menuList}/>
                 <div className="content">
-                    <div style={{minHeight: 42}}>
+                    <div style={{minHeight: 42}} ref={tabsBoxRef}>
                         {layout === "multiple" ? <PagesBreadcrumb /> : <SingleBreadcrumb />}
                     </div>
                     <div className="container">

@@ -73,9 +73,6 @@ function request({ url, method = "POST", data, config = {} }: serviceProps){
     });
 }
 
-export { request }
-export default service
-
 interface responseProps {
     code: number,
     data?: any,
@@ -88,3 +85,6 @@ interface serviceProps {
     data: any,
     config?: AxiosRequestConfig
 }
+
+export { request, type serviceProps }
+export default service

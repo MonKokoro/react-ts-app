@@ -17,6 +17,54 @@
 - echarts图表自然也是有的√
 - 适合多环境脚本打包发布的配置
 
+## 目录结构
+```
+├── public                     // 公共文件夹
+├── build                      // 打包构建文件夹
+├── webpack                    // 打包配置相关
+├── src                        // 项目源码
+│   ├── assets                 // 静态资源
+│   ├── axios                  // axios请求封装
+│   ├── common                 // 项目公用组件（涉及业务内容但全局通用）
+│   ├── component              // 项目公用基本组件（不涉及业务内容，比如分页查询、表单等）
+│   ├── hooks                  // 自定义全局钩子函数
+│   ├── layout                 // 基本布局
+│   ├── mock                   // mock数据
+│   ├── page                   // 项目页面
+│   │    ├── home              // 主页
+│   │    ├── error-page        // 错误页面
+│   │    ├── login             // 登录页面
+│   │    └── ......
+│   ├── store                  // redux相关内容
+│   ├── App.tsx                // 入口页面
+│   ├── index.tsx              // 入口、设置全局样式等
+│   ├── index.less             // 全局样式
+│   ├── lib.ts                 // 简易方法
+│   └── index.less             // 全局样式
+├── .babelrc                   // babel-loader 配置
+├── eslintrc.js                // eslint 配置项
+├── .gitignore                 // git 忽略项
+├── favicon.ico                // favicon图标
+├── index.html                 // html模板
+└── package.json               // package.json
+
+```
+
+## 本地开发
+```
+git clone https://github.com/MonKokoro/react-ts-app.git
+
+cd react-ts-app
+
+npm install
+
+// 运行
+npm run start
+
+// 执行构建，将生成的build文件夹放在服务器下即可访问√
+npm run build
+```
+
 ## 预览
 ### 登录页面
 ![登陆页面](./src/assets/preview/login.png)
