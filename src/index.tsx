@@ -4,7 +4,6 @@ import { AliveScope } from 'react-activation';
 import { Provider } from 'react-redux';
 import App from './App';
 import store from './store';
-import { request } from '@/axios'
 
 import './mock'
 

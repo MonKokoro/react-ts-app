@@ -1,7 +1,7 @@
 /** 数值域组件 */
 
 import React, { useState, useEffect, useMemo } from "react";
-import { Input, InputNumber } from "antd"
+import { Input, InputNumber, Space } from "antd"
 import useDeepEffect from "@/hooks/useDeepEffect"
 
 function NumberRange({ 
@@ -30,7 +30,7 @@ function NumberRange({
         usedProps["min"] = limit[0]
         usedProps["max"] = limit[1]
     }
-    return <div><Input.Group compact>
+    return <Space.Compact style={{ width: '100%' }}>
         <InputNumber 
             style={{width: "calc(50% - 15px)"}} 
             {...usedProps} 
@@ -68,7 +68,7 @@ function NumberRange({
                 setMax(val)
             }}
         />
-    </Input.Group></div>
+    </Space.Compact>
 }
 
 export type NumberRangeProps = {

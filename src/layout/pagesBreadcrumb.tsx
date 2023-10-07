@@ -1,26 +1,20 @@
 /** 页头面包屑 - 多标签模式 */
 
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { useAliveController } from 'react-activation'
-import { Tabs, Button } from 'antd'
+import { Tabs, Dropdown } from 'antd'
 import store from "@/store";
-import { useDispatch } from 'react-redux';
-import { addPage, removePage } from '@/store/pageList'
 import { routerMap, specialRouteMap } from "@/router";
 import { usePage } from "@/hooks"
 import lib from '@/lib';
 
 function PagesBreadcrumb() {
-    // const navigate = useNavigate()
-    const tabsBoxRef = useRef<any>()
+    const { refreshScope } = useAliveController()
     const location = useLocation()
-    const dispatch = useDispatch()
-    const { drop } = useAliveController()
     const page = usePage()
     const [ activeKey, setActiveKey ] = useState<string>()
     const [ pageList, setPageList ] = useState([])
-    const [ tabsBoxWidth, setTabsBoxWidth ] = useState(0)
 
     useEffect(() => {
         const pathname = location.pathname.replace('/', '') || 'home'
@@ -29,34 +23,42 @@ function PagesBreadcrumb() {
                 url: location.pathname,
                 param: page.searchToJson(location.search)
             })
-            // dispatch(addPage({
-            //     key: pathname,
-            //     label: routerMap[pathname][1]
-            // }))
-        }
-    }, [])
-
-    /** 监听浏览器大小变化 */
-    useEffect(() => {
-        window.addEventListener(`resize`, lib.throttle(() => setTabsBoxWidth(tabsBoxRef.current.offsetWidth), 100));
-        return () => {
-            window.removeEventListener(`resize`, lib.throttle(() => setTabsBoxWidth(tabsBoxRef.current.offsetWidth), 100));
         }
     }, [])
 
     useEffect(() => {
-        // console.log(location)
-        // const pathname = location.pathname.replace('/', '')
         setActiveKey(`${location.pathname}${location.search}`)
     }, [location.pathname])
 
     store.subscribe(() => {
-        setPageList(store.getState().pageList)
+        setPageList(store.getState().pageList.reduce((prev, curr) => {
+            prev.push({
+                ...curr,
+                label: <>
+                    <Dropdown 
+                        menu={{
+                            items: [
+                                { label: "仅保留该页", key: "1", onClick: () => {
+                                        page.reservePage(curr.key)
+                                        setActiveKey(curr.key)
+                                } },
+                                { label: "刷新", key: "2", onClick: () => refreshScope(curr.routeKey) }
+                            ],
+                        }}
+                        trigger={['contextMenu']}
+                    >
+                        <div>{curr.label}</div>
+                    </Dropdown>
+                </>
+            })
+            return prev
+        }, []))
     })
 
-    console.log(tabsBoxWidth)
-    return <div className="pages-breadcrumb" ref={tabsBoxRef}>
-        <div style={{width: tabsBoxWidth ? tabsBoxWidth - 120 : "auto"}}>
+    return <div className="pages-breadcrumb">
+        {/** 设置min-width可用于避免容器被子元素撑开 */}
+        {/** 因为min-width的优先级大于width和max-width，而弹性布局中min-width为auto，因此自然会被撑大 */}
+        <div style={{width: "100%", minWidth: 0}}>
         {/* <div> */}
             <Tabs
                 type="editable-card"
@@ -64,20 +66,12 @@ function PagesBreadcrumb() {
                 activeKey={activeKey}
                 tabPosition={'top'}
                 items={pageList}
-                // tabBarExtraContent={<Button 
-                //     style={{marginRight: 8}} 
-                //     size="small"
-                //     onClick={() => {
-                //         page.reservePage(`${location.pathname}${location.search}`)
-                //     }}
-                // >仅保留当前页</Button>}
                 onChange={(key) => {
                     const pageItem = pageList.find((item) => item.key === key)
                     page.openPage({
                         url: `/${pageItem.routeKey}`,
                         param: pageItem.param
                     })
-                    // navigate(`/${key}`)
                     setActiveKey(key)
                 }}
                 onEdit={(targetKey, action) => {
@@ -90,8 +84,12 @@ function PagesBreadcrumb() {
                             }
                             return false
                         })
-                        dispatch(removePage(targetPage))
-                        drop(targetPage.key)
+                        page.closePage({
+                            url: `/${targetPage.routeKey}`,
+                            param: targetPage.param
+                        })
+                        // dispatch(removePage(targetPage))
+                        // dropScope(targetPage.key)
                         if(targetPage.key === activeKey){
                             let nextIndex = 0
                             if(pageList[currentIndex+1]){
@@ -105,20 +103,10 @@ function PagesBreadcrumb() {
                                 url: `/${pageList[nextIndex].routeKey}`,
                                 param: pageList[nextIndex].param
                             })
-                            // navigate(`/${pageList[nextIndex].key}`)
                         }
                     }
                 }}
             />
-        </div>
-        <div style={{width: 120}}>
-            <Button 
-                style={{margin: "0 8px"}} 
-                size="small"
-                onClick={() => {
-                    page.reservePage(`${location.pathname}${location.search}`)
-                }}
-            >仅保留当前页</Button>
         </div>
     </div>
 }

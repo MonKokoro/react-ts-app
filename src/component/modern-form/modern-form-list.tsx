@@ -121,10 +121,31 @@ function ModernFormList({
                 {(fields, { add, remove }, { errors }) => {
                     return <>
                         {
-                            collapse && <Collapse className="card-content-collapse">
-                                {fields.map((field, index) => {
+                            collapse && <Collapse className="card-content-collapse"
+                                items={fields.reduce((prev, field, index) => {
                                     // 经过测试，Panel内部元素的渲染在外部元素渲染完成之后
                                     // 因此Panel中NovelFormRender组件的useEffect总是会比外部晚执行
+                                    prev.push({
+                                        key: field.key,
+                                        label: childrenTitle(field),
+                                        extra: !hideRemover ? <CloseOutlined onClick={() => remove(field.name)}/> : '',
+                                        children: <div className="form-item-list-ite">
+                                            <ModernFormRender 
+                                                config={configRevise(config(field, index))} 
+                                                columns={columns} 
+                                                field={field} 
+                                                listName={name}
+                                            />
+                                        </div>,
+                                        forceRender: true
+                                    })
+                                    return prev
+                                }, [])}
+                            />
+                        }
+                        {/* {
+                            collapse && <Collapse className="card-content-collapse">
+                                {fields.map((field, index) => {
                                     return <Panel 
                                         header={childrenTitle(field)} 
                                         key={field.key}
@@ -137,7 +158,7 @@ function ModernFormList({
                                     </Panel>
                                 })}
                             </Collapse>
-                        }
+                        } */}
                         {
                             !collapse && <Fragment>
                                 {fields.map((field, index) => {

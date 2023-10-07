@@ -10,14 +10,12 @@ export const pageListSlice = createSlice({
     reducers: {
         addPage: (state: pageListItemProps[], action) => {
             const newPage: any = action.payload
-            // if(state.some(record => record.key === newPage.key))
-            //     return
             return state = [...state, newPage]
         },
         removePage: (state: pageListItemProps[], action) => {
-            const targetPage: any = action.payload
+            const targetPageKey: string = action.payload
             return state = state.reduce((prev, curr) => {
-                if(curr.key !== targetPage.key)
+                if(curr.key !== targetPageKey)
                     prev.push(curr)
                 return prev
             }, [])
@@ -28,17 +26,21 @@ export const pageListSlice = createSlice({
             ]
         },
         setPages: (state: pageListItemProps[], action) => {
-            console.log(action.payload)
             return state = [...action.payload]
         }
     },
 })
 
 export type pageListItemProps = {
+    /** 路由tab名称 */
     label: string,
+    /** 路由唯一key值，与地址栏带参数url路由等效 */
     key: string,
+    /** 路由key值，用于寻找相应的页面 */
     routeKey: string,
+    /** tab参数 */
     param?: any,
+    /** 是否可关闭 */
     closeIcon?: boolean
 }
 export const { addPage, removePage, clearPage, setPages } = pageListSlice.actions

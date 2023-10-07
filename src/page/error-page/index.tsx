@@ -13,7 +13,6 @@ function ErrorPage() {
                 <div className='error-bottom'>
                     <Button type='primary' onClick={() => {
                         page.openPage('home')
-                        page.closePage('home')
                     }}>返回首页</Button>
                 </div>
             </div>

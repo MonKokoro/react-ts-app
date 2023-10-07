@@ -138,7 +138,7 @@ function Layout () {
                             unmountOnExit
                         >
                             <div className="mask">
-                                <Spin tip="加载中，请稍后..."/>
+                                <Spin />
                             </div>
                         </CSSTransition>
                         <SwitchTransition>

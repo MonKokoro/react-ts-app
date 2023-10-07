@@ -1,14 +1,23 @@
+/*
+ * @Author: MonKokoro 735335659@qq.com
+ * @Date: 2023-09-14 14:28:14
+ * @LastEditors: MonKokoro 735335659@qq.com
+ * @LastEditTime: 2023-10-07 16:18:06
+ * @FilePath: \react-ts-app\src\hooks\usePage.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /** 页面跳转hook */
 
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useAliveController } from 'react-activation'
 import store from "@/store";
 import { addPage, removePage, setPages } from '@/store/pageList'
 import { routerMap, specialRouteMap } from "@/router";
 
 export default function usePage() {
-    const location = useLocation()
+    const { dropScope } = useAliveController()
     const navigate = useNavigate()
     const dispatch = useDispatch();
     
@@ -99,17 +108,46 @@ export default function usePage() {
     }
 
     /** 页面关闭方法 */
-    function closePage(url: string){
-        removePage(url.replace('/', ''))
+    function closePage(obj: openPageObject | string){
+        dispatch(removePage(obj instanceof Object ? toUrl(obj.url, obj.param) : obj))
+
+        if(layout === "multiple"){
+            const pageList = store.getState().pageList
+            /** 传入对象时，如果当前已缓存的tab中没有其它的此路由key页面，则清除该路由key下的缓存 */
+            if(obj instanceof Object){
+                if(!pageList.some(record => record.key !== toUrl(obj.url, obj.param) && record.routeKey === obj.url.replace('/', ''))){
+                    dropScope(obj.url.replace('/', ''))
+                }
+            }
+            /** 传入路由key时，清除该路由key下的缓存 */
+            else{
+                dropScope(obj)
+            }
+        }
     }
 
-    /** 仅保留当前页 */
+    /** 仅保留一个页面，仅多标签模式下可用 */
     function reservePage(obj: openPageObject | string){
-        const pageList = store.getState().pageList
-        let key = obj instanceof Object ? toUrl(obj.url, obj.param) : obj
-        return dispatch(
-            setPages(pageList.filter(item => item.routeKey === 'home' || item.key === key))
-        )
+        if(layout === "multiple"){
+            const pageList = store.getState().pageList
+            let key = obj instanceof Object ? toUrl(obj.url, obj.param) : obj
+            let result = pageList.reduce((prev, curr) => {
+                if(curr.routeKey === 'home' || curr.key === key){
+                    prev.push(curr)
+                }
+                else{
+                    if(curr.routeKey !== (obj instanceof Object ? obj.url.replace('/', '') : obj)){
+                        dropScope(curr.routeKey)
+                    }
+                }
+                return prev
+            }, [])
+            dispatch(
+                // setPages(pageList.filter(item => item.routeKey === 'home' || item.key === key))
+                setPages(result)
+            )
+        }
+        return
     }
 
     /** 获取当前路由下的param */
