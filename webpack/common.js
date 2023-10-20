@@ -3,6 +3,7 @@ const path = require('path')
 const chalk = require("chalk");
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const WindiCSSWebpackPlugin = require('windicss-webpack-plugin')
 
 module.exports = {
     mode: 'development',
@@ -20,6 +21,7 @@ module.exports = {
             inject: true,
             hash: true
         }),
+        new WindiCSSWebpackPlugin()
     ],
     output: {
         filename: '[name]-bundle.js',

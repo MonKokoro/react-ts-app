@@ -26,14 +26,14 @@ function Scrollbar({
 
     /** 监听浏览器大小变化 */
     useEffect(() => {
-        window.addEventListener(`resize`, getHeight);
+        window.addEventListener(`resize`, getHeight, {passive: true});
         return () => {
             window.removeEventListener(`resize`, getHeight);
         }
     }, [])
 
     useEffect(() => {
-        document.addEventListener('wheel', wheelMove);
+        document.addEventListener('wheel', wheelMove, {passive: true});
         return () => {
             document.removeEventListener('wheel', wheelMove);
         };
@@ -41,7 +41,7 @@ function Scrollbar({
 
     useEffect(() => {
         if(isMouseDown){
-            document.addEventListener('mousemove', mouseMove);
+            document.addEventListener('mousemove', mouseMove, {passive: true});
         }
         else{
             document.removeEventListener('mousemove', mouseMove);

@@ -9,6 +9,7 @@ import './mock'
 
 import './index.less';
 import 'antd/dist/reset.css';
+import 'windi.css'
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
