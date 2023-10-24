@@ -7,6 +7,7 @@ export default Mock.mock(/\/mock\/getBondMemberList*?/, 'get', ({ body }) => {
         member: function() {
             let members = [
                 {
+                    "memberId": 1,
                     "name": "後藤ひとり",
                     "chineseName": "后藤一里",
                     "age": 15,
@@ -14,6 +15,7 @@ export default Mock.mock(/\/mock\/getBondMemberList*?/, 'get', ({ body }) => {
                     "responsibility": "guitarist"
                 },
                 {
+                    "memberId": 2,
                     "name": "いじちにじか",
                     "chineseName": "伊地知虹夏",
                     "age": 18,
@@ -21,6 +23,7 @@ export default Mock.mock(/\/mock\/getBondMemberList*?/, 'get', ({ body }) => {
                     "responsibility": "drummer"
                 },
                 {
+                    "memberId": 3,
                     "name": "きたいくよ",
                     "chineseName": "喜多郁代",
                     "age": 15,
@@ -28,6 +31,7 @@ export default Mock.mock(/\/mock\/getBondMemberList*?/, 'get', ({ body }) => {
                     "responsibility": "leadSinger"
                 },
                 {
+                    "memberId": 4,
                     "name": "山田リョウ",
                     "chineseName": "山田凉",
                     "age": 18,

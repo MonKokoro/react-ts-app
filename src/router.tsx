@@ -22,6 +22,7 @@ import Home from "./page/home"
 import ModernTableTest from "./page/modern-table-test";
 import ModernTableTestDetail from "./page/modern-table-test-detail";
 import ModernFormTest from "./page/modern-form-test";
+import AnimateCompDemo from "./page/animate-comp-demo";
 import Canvas from "./page/canvas"
 import DragTest from "./page/drag-test";
 import ScrollbarTest from "./page/scrollbar-test"
@@ -35,8 +36,9 @@ const routerMap: any = {
     "modern-table-test": [<ModernTableTest />, "ModernTable测试"],
     "modern-table-test-detail": [<ModernTableTestDetail />, "ModernTable测试-详情"],
     "modern-form-test": [<ModernFormTest />, "ModernForm测试"],
+    "animate-comp-demo": [<AnimateCompDemo />, "元素组件demo"],
     "drag-test": [<DragTest />, "拖拽练习"],
-    "scrollbar-test": [<ScrollbarTest />, "滚动条测试"],
+    "scrollbar-test": [<ScrollbarTest />, "滚动条测试"]
 }
 
 /** 面包屑映射，支持映射路由，也支持静态文本 */

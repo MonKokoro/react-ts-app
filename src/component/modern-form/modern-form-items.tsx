@@ -53,7 +53,6 @@ function ModernFormItems({
         switch(item.type){
             case "SearchSelect": {
                 return (value: any) => {
-                    console.log(item)
                     if(value && value.id)
                         return {
                             [item.name[0]]: value.id,

@@ -17,16 +17,40 @@ function PagesBreadcrumb() {
     const [ pageList, setPageList ] = useState([])
 
     useEffect(() => {
-        const pathname = location.pathname.replace('/', '') || 'home'
+        const pathname = location.pathname.replace('/', '')
         if(routerMap[pathname]){
             page.openPage({
                 url: location.pathname,
                 param: page.searchToJson(location.search)
             })
         }
+        
+        setPageList(store.getState().pageList.reduce((prev, curr) => {
+            prev.push({
+                ...curr,
+                label: <>
+                    <Dropdown 
+                        menu={{
+                            items: [
+                                { label: "仅保留该页", key: "1", onClick: () => {
+                                        page.reservePage(curr.key)
+                                        setActiveKey(curr.key)
+                                } },
+                                { label: "刷新", key: "2", onClick: () => refreshScope(curr.routeKey) }
+                            ],
+                        }}
+                        trigger={['contextMenu']}
+                    >
+                        <div>{curr.label}</div>
+                    </Dropdown>
+                </>
+            })
+            return prev
+        }, []))
     }, [])
 
     useEffect(() => {
+        console.log(location, pageList)
         setActiveKey(`${location.pathname}${location.search}`)
     }, [location.pathname])
 

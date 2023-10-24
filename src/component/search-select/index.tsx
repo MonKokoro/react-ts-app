@@ -1,7 +1,7 @@
 /** 下拉搜索框 - 实现后台模糊查询的下拉框组件 */
 
 import React, { useState, useEffect } from "react";
-import { Select, Spin } from "antd"
+import { Select, Spin, Empty } from "antd"
 import { useDeepEffect, useDebounce } from "@/hooks";
 import lib from "../../lib";
 
@@ -97,10 +97,20 @@ function SearchSelect({
         // 老东西，你的loading真没用😔
         // loading={loading}
         allowClear={true}
-        onClear={() => setSelectList([])}
+        onClear={() => {
+            setSelectList([])
+            setInputValue("")
+        }}
         onSearch={(value) => onSearch(value)}
         optionFilterProp="children"
-        notFoundContent={ loading ? <Spin size="small" /> : null }
+        notFoundContent={ loading ? <div style={{padding: '4px 12px 6px 12px'}}>
+            <Spin size="small" />
+        </div> : <Empty 
+            style={{padding: '4px 12px 6px 12px'}}
+            description={<span className="text-gray-500">
+                {inputValue ? "未找到数据哦..." : "请输入尝试查询~"}
+            </span>}
+        /> }
         showSearch={true}
         {...props}
     >

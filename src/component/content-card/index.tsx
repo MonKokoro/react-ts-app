@@ -5,11 +5,12 @@ import './index.less'
 
 function ContentCard({
     title,
+    className,
     tip,
     rightRender,
     children
 }: ContentCardProps) {
-    return <div className="content-card">
+    return <div className={`content-card${className ? ` ${className}` : ''}`}>
         <div className="card-top">
             <div className="title">
                 <div className="title-text">{title}</div>
@@ -29,6 +30,7 @@ function ContentCard({
 
 export type ContentCardProps = {
     title: string,
+    className?: string,
     tip?: string,
     rightRender?: string | React.ReactNode,
     children?: string | React.ReactNode

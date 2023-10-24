@@ -19,11 +19,15 @@ function Home() {
         return () => clearInterval(interval);
     }, []);
 
-    /** 监听浏览器大小变化 */
+    /** 监听浏览器大小变化，出于视觉效果的考虑，取消防抖 */
     useEffect(() => {
-        window.addEventListener(`resize`, lib.throttle(resizeUpdate, 100));
+        // window.addEventListener(`resize`, lib.throttle(resizeUpdate, 100));
+        // return () => {
+        //     window.removeEventListener(`resize`, lib.throttle(resizeUpdate, 100));
+        // }
+        window.addEventListener(`resize`, resizeUpdate);
         return () => {
-            window.removeEventListener(`resize`, lib.throttle(resizeUpdate, 100));
+            window.removeEventListener(`resize`, resizeUpdate);
         }
     }, [])
 

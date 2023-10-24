@@ -99,11 +99,11 @@ function ModernTableTest() {
             width: 230,
             render: (_: any, record: any) => {
                 return <Space>
-                    <span className='link' onClick={() => detailDrawer.open({ id: record.id })}>详情</span>
+                    <span className='link' onClick={() => detailDrawer.open({ id: record.memberId })}>详情</span>
                     <span className='link' onClick={() => page.openPage({
                         url: "/modern-table-test-detail",
                         // label: "详情测试",
-                        param: { id: record.id }
+                        param: { id: record.memberId }
                     })}>页面详情</span>
                     <span className='link-danger' onClick={() => batchDelete([record.id])}>删除</span>
                 </Space>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import Drawer from "@/component/drawer"
 // import DetailForm from "@/component/detail-form";
+import ContentCard from "@/component/content-card";
 import lib from "@/lib";
 
 function Detail({ show, data, onClose }: DetailProps){
@@ -16,7 +17,7 @@ function Detail({ show, data, onClose }: DetailProps){
 
     function getDetail(data: any){
         lib.request({
-            url: "/f",
+            url: "/mock/getBondMemberDetail",
             data: { ...data },
             method: "GET",
             needMask: true,
@@ -52,7 +53,7 @@ function Detail({ show, data, onClose }: DetailProps){
     ]
 
     return <Drawer
-        title="核心企业详情"
+        title="成员详情"
         open={visible}
         onClose={() => {
             setVisible(false)
@@ -60,13 +61,16 @@ function Detail({ show, data, onClose }: DetailProps){
             setParam({})
         }}
     >
-        <div className="modern-table-detail-drawer" style={{margin: "32px 16px"}}>
+        <div className="modern-table-detail-drawer" style={{margin: "0 16px"}}>
             {/* <DetailForm 
                 title={"基本信息"}
                 config={ baseConfig }
                 param={ param }
                 column={2}
             /> */}
+            <ContentCard title="成员信息">
+
+            </ContentCard>
         </div>
     </Drawer>
 }

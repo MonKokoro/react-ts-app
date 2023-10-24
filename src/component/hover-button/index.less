@@ -1,0 +1,79 @@
+.hover-button{
+    position: relative;
+    background-color: #FFFFFF;
+    border: 1px solid #25D366;
+    padding: 2px 20px;
+    transition: 0.5s;
+    font-size: 16px;
+    border-radius: 0.4em;
+    white-space: nowrap;
+    cursor: pointer;
+    p{
+        position: relative;
+        left: 0;
+        color: #25D366;
+        transition: 0.5s;
+    }
+    .hover-button-icon{
+        position: absolute;
+        top: 0.1em;
+        right: 0.5em;
+    }
+    svg {
+        margin: 0;
+        padding: 0;
+        opacity: 0;
+        transition: 0.5s;
+        height: 1em;
+        fill: #fff
+    }
+    &:hover{
+        background-color: #25D366;
+        p{
+            left: -0.5em;
+            color: #FFFFFF
+        }
+        svg {
+            opacity: 1;
+        }
+    }
+    &:active{
+        transform: scale(0.98);
+    }
+}
+
+.hover-button-noicon{
+    &:hover{
+        p{ left: 0 }
+    }
+}
+
+.hover-button-darkGreen{
+    border: 1px solid #13547A;
+    p{ color: #13547A }
+    &:hover{ background-color: #13547A; }
+}
+
+.hover-button-brightBlue{
+    border: 1px solid #1677FF;
+    p{ color: #1677FF }
+    &:hover{ background-color: #1677FF; }
+}
+
+.hover-button-purplishRed{
+    border: 1px solid #CE9C9D;
+    p{ color: #CE9C9D }
+    &:hover{ background-color: #CE9C9D; }
+}
+
+.hover-button-leafGreen{
+    border: 1px solid #ABD5BE;
+    p{ color: #ABD5BE }
+    &:hover{ background-color: #ABD5BE; }
+}
+
+.hover-button-darkPink{
+    border: 1px solid #E0B394;
+    p{ color: #E0B394 }
+    &:hover{ background-color: #E0B394; }
+}

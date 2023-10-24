@@ -4,6 +4,7 @@ import store from "./store";
 import axios from 'axios'
 
 import { addMask, decreaseMask } from './store/needMaskCount'
+import { themeMap } from './theme';
 
 const { confirm } = Modal
 
@@ -199,6 +200,11 @@ var lib = {
             }
         }
     },
+
+    /** 快速获取主题色 */
+    getThemeColor (theme?: string) {
+        return themeMap[theme || store.getState().theme] || "#13547A"
+    }
 }
 
 export default lib;

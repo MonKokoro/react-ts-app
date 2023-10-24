@@ -16,7 +16,8 @@ export default Mock.mock(/\/mock\/getMenuList*?/, 'get', ({ body }) => {
                 icon: "BarsOutlined",
                 children: [
                     {url: "modern-table-test", name: "ModernTable"},
-                    {url: "modern-form-test", name: "ModernForm"}
+                    {url: "modern-form-test", name: "ModernForm"},
+                    {url: "animate-comp-demo", name: "元素组件Demo"}
                 ]
             },
             {

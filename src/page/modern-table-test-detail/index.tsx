@@ -9,7 +9,6 @@ function ModernTableTestDetail() {
     return <div className="modern-table-test-detail main-page">
         <ContentCard title='基本信息'>
             <div className="text-green-400">{param?.id}测试</div>
-            
         </ContentCard>
         
     </div>

@@ -13,7 +13,9 @@ import store from "@/store";
 // import Scrollbar from "@/component/scrollbar";
 import axios from "@/axios";
 import { clearPage } from '@/store/pageList'
+import { themeSet } from '@/store/theme'
 import lib from "@/lib";
+import { themeList, themeMap } from "@/theme"
 
 import Menu from './menu'
 import Background from "./background";
@@ -29,7 +31,7 @@ function Layout () {
     const aliveController = useAliveController()
     const [ userName, setUserName ] = useState<string>()
     const [ maskCount, setMaskCount ] = useState<number>(0)
-    const [ theme, setTheme ] = useState<string>(window.localStorage.getItem("theme") || "#13547A")
+    const [ theme, setTheme ] = useState<string>(window.localStorage.getItem("theme"))
     const [ layout, setLayout ] = useState<string>(window.localStorage.getItem("layout") || "single")
     const [ menuList, setMenuList ] = useState([])
 
@@ -45,13 +47,14 @@ function Layout () {
 
     store.subscribe(() => {
         setMaskCount(store.getState().needMaskCount)
+        setTheme(store.getState().theme)
     })
 
     /** 路由ref */
     const { nodeRef } = routeList.find((route) => route.path === location.pathname) || {}
 
     /** 主题色 */
-    const colorList = ["#13547A", "#1677FF", "#CE9C9D", "#ABD5BE", "#E0B394"]
+    // const colorList = ["#13547A", "#1677FF", "#CE9C9D", "#ABD5BE", "#E0B394"]
 
     /** 获取菜单列表 */
     function getMenuList(){
@@ -66,7 +69,7 @@ function Layout () {
     return <ConfigProvider
         locale={zhCN}
         theme={{
-            token: { colorPrimary: theme },
+            token: { colorPrimary: themeMap[theme] ?.color || "#13547A" },
         }}
     >
         <div className='layout'>
@@ -81,14 +84,16 @@ function Layout () {
                         <div className="skin-modal">
                             <div className="title">选择主题</div>
                             <div className="content">
-                                {colorList.map(color => {
+                                {/* {colorList.map(color => { */}
+                                {themeList.map(item => {
                                     return <div 
-                                        key={color}
-                                        className={`color-box ${theme === color ? "color-focus" : ""}`}
-                                        style={{background: color}} 
+                                        key={item.key}
+                                        className={`color-box ${theme === item.key ? "color-focus" : ""}`}
+                                        style={{background: item.color}} 
                                         onClick={() => {
-                                            setTheme(color)
-                                            window.localStorage.setItem("theme", color)
+                                            // setTheme(color)
+                                            dispatch(themeSet(item.key))
+                                            window.localStorage.setItem("theme", item.key)
                                         }}
                                     />
                                 })}
@@ -121,7 +126,7 @@ function Layout () {
                         <DownOutlined className="user-arrow"/>
                     </div>
                 </div>
-                <Background color={theme}/>
+                <Background color={themeMap[theme] ?.color || "#13547A"}/>
             </div>
             {/** 菜单+内容区域 */}
             <div className='content-box'>
