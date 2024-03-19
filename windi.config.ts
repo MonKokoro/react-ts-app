@@ -1,5 +1,5 @@
 import { defineConfig } from 'windicss/helpers'
-import colors from 'windicss/colors'
+// import colors from 'windicss/colors'
 
 export default defineConfig({
     extract: {

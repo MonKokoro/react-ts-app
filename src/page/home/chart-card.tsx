@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Segmented } from 'antd'
 import lib from "../../lib"
 import './index.less'
+import Loading from '@/component/loading'
 
 import * as echarts from 'echarts/core';
 import { LineChart } from 'echarts/charts';
@@ -32,7 +33,7 @@ echarts.use([
 function ChartCard({ title, url, chartKey, lineDesc, color }: ChartCardProps){
     const [ segmentedValue, setSegmentedValue ] = useState<string | number>("近三月")
     const [ option, setOption ] = useState<any>()
-    // const [ loading, setLoading ] = useState(false)
+    const [ loading, setLoading ] = useState(false)
     // const [ refresh, setRefresh ] = useState(0)
 
     useEffect(() => {
@@ -55,11 +56,11 @@ function ChartCard({ title, url, chartKey, lineDesc, color }: ChartCardProps){
             "近半年": 1,
             "近一年": 2
         }
+        setLoading(true)
         lib.request({
             url: url,
             method: "GET",
             data: { scope: scopeMap[segmentedValue] },
-            needMask: true,
             success: (res: any) => {
                 const xAxis = res.monthList
                 let series = []
@@ -115,6 +116,10 @@ function ChartCard({ title, url, chartKey, lineDesc, color }: ChartCardProps){
                     option["color"] = color
                 }
                 setOption(option);
+                setLoading(false)
+            },
+            fail: () => {
+                setLoading(false)
             }
         })
     }

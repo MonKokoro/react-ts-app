@@ -12,7 +12,7 @@ function MessageCard() {
     /** 获取消息列表 */
     function getMessageList(){
         lib.request({
-            url: "/mock/getMessageList",
+            url: "/abc/getMessageList",
             method: "GET",
             success: (res: any[]) => {
                 setMessageList(res)

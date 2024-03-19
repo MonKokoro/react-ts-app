@@ -33,7 +33,7 @@ function AnimateCompDemo() {
                         <Loading />
                     </div>}
                 >
-                    <Meta title="Loading动画" description="将6个div组装成一个立方体进行旋转，挺有意思的" />
+                    <Meta title="Loading动画" description="将6个div组装成一个立方体进行旋转，比较有意思的做法" />
                 </Card>
             </Col>
         </Row>
