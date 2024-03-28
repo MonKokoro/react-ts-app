@@ -1,3 +1,4 @@
+const path = require('path')
 const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const common = require("./common.js")
@@ -16,4 +17,10 @@ module.exports = merge(common, {
             "BUILD_ENV": JSON.stringify('online')
         })
     ],
+    output: {
+        filename: '[name]-bundle.js',
+        path: path.resolve('./', 'docs'),
+        publicPath: '/react-ts-app',
+        clean: true
+    },
 })
