@@ -45,6 +45,7 @@ const routerMap: any = {
 const breadcrumbMap: any = {
     "modern-table-test": ["组件案例"],
     "modern-table-test-detail": ["组件案例", "modern-table-test"],
+    "animate-comp-demo": ["组件案例"],
     "modern-form-test": ["组件案例"]
 }
 
